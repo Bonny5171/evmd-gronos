@@ -1,0 +1,29 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+gronos
+debug
+
+# Test binary, build with `go test -c`
+*.test
+
+# System folders
+.DS_Store
+
+# bin flder
+bin/*
+
+# Vendor
+vendor/*
+!vendor/vendor.json
+
+# VSCode Workspaces
+*.code-workspace
+
+# Temp dir
+tmp
+
+# dive docker
+dive.log

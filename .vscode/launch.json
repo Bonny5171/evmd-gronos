@@ -1,0 +1,65 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug - Local",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "remotePath": "",
+            "port": 2345,
+            "host": "127.0.0.1",
+            "program": "${workspaceRoot}/app/main.go",
+            "env": {
+                "FAKTORY_URL": "tcp://localhost:7419",
+                "GRONOS_SCHEDULE": "@every 5s", // By default this value is "@every 30s"
+                "GRONOS_DATABASE_CONFIG_DSN": "host=localhost port=30010 sslmode=disable dbname=sfa_config user=postgres password=@123456",
+                "GRONOS_DATABASE_DSN": "host=localhost port=30010 sslmode=disable dbname=sfa_product user=postgres password=@123456",
+                "GRONOS_STACK_NAME": "product"
+            },
+            "args": [],
+            "showLog": true
+        },
+        {
+            "name": "Debug - Azure Dev",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "remotePath": "",
+            "port": 2345,
+            "host": "127.0.0.1",
+            "program": "${workspaceRoot}/app/main.go",
+            "env": {
+                "FAKTORY_URL": "tcp://localhost:7419",
+                "GRONOS_SCHEDULE": "@every 5s", // By default this value is "@every 30s"
+                "GRONOS_DATABASE_CONFIG_DSN": "host=127.0.0.1 port=54320 sslmode=disable dbname=sfa_config user=postgres password=p0st@gr3s",
+                "GRONOS_DATABASE_DSN": "host=127.0.0.1 port=54320 sslmode=disable dbname=sfa_resource user=postgres password=p0st@gr3s",
+                "GRONOS_STACK_NAME": "resource"
+            },
+            "args": [],
+            "showLog": true
+        },
+        {
+            "name": "Debug - GCloud Dev",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "remotePath": "",
+            "port": 2345,
+            "host": "127.0.0.1",
+            "program": "${workspaceRoot}/app/main.go",
+            "env": {
+                "FAKTORY_URL": "tcp://:F4kt0ry2019@35.238.202.211:7419",
+                "GRONOS_SCHEDULE": "@every 5s", // By default this value is "@every 30s"
+                "GRONOS_DATABASE_CONFIG_DSN": "host=127.0.0.1 port=54320 sslmode=disable dbname=sfa_config user=postgres password=p0st@gr3s",
+                "GRONOS_DATABASE_DSN": "host=127.0.0.1 port=54320 sslmode=disable dbname=sfa_order user=postgres password=p0st@gr3s",
+                "GRONOS_STACK_NAME": "order"
+            },
+            "args": [],
+            "showLog": true
+        }
+    ]
+}
