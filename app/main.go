@@ -9,12 +9,12 @@ import (
 	"syscall"
 	"time"
 
-	"bitbucket.org/everymind/gopkgs/db"
-	"bitbucket.org/everymind/gopkgs/logger"
+	"bitbucket.org/everymind/evmd-golib/db"
+	"bitbucket.org/everymind/evmd-golib/logger"
 	"github.com/besser/cron"
 	"github.com/pkg/errors"
 
-	"bitbucket.org/everymind/gronos/core"
+	"bitbucket.org/everymind/evmd-gronos/core"
 )
 
 func init() {

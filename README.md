@@ -16,14 +16,14 @@ $ mkdir -p $GOPATH/src/bitbucket.org/everymind
 
 ```bash
 $ cd $GOPATH/src/bitbucket.org/everymind
-$ git clone https://seu-usuario-git@bitbucket.org/everymind/gronos.git
+$ git clone https://seu-usuario-git@bitbucket.org/everymind/evmd-gronos.git
 ```
 
-### Clonar o repositório gopkgs
+### Clonar o repositório evmd-golib
 
 ```bash
 $ cd $GOPATH/src/bitbucket.org/everymind
-$ git clone https://seu-usuario-git@bitbucket.org/everymind/gopkgs.git
+$ git clone https://seu-usuario-git@bitbucket.org/everymind/evmd-golib.git
 ```
 
 ### Baixar dependências de repositórios externos

@@ -4,8 +4,8 @@ GOBUILD   = go build -v
 OS        = linux
 ARCH      = amd64
 APPNAME   = gronos
-IMAGE     = everymind/gronos
-VERSION   = 1.3.6
+IMAGE     = everymind/evmd-gronos
+VERSION   = 1.0.0
 
 clean:
 	@go clean -i -x ./...
