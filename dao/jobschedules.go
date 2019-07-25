@@ -1,10 +1,10 @@
 package dao
 
 import (
-	"bitbucket.org/everymind/gopkgs/db"
+	"bitbucket.org/everymind/evmd-golib/db"
 	"github.com/pkg/errors"
 
-	"bitbucket.org/everymind/gronos/model"
+	"bitbucket.org/everymind/evmd-gronos/model"
 )
 
 // GetSchedules retorna todos os 'jobs' agendados que deverão ser executadas

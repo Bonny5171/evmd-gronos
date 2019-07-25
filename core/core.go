@@ -3,13 +3,13 @@ package core
 import (
 	"time"
 
-	"bitbucket.org/everymind/gopkgs/logger"
-	"bitbucket.org/everymind/gopkgs/utils"
+	"bitbucket.org/everymind/evmd-golib/logger"
+	"bitbucket.org/everymind/evmd-golib/utils"
 	"github.com/besser/cron"
 	"github.com/pkg/errors"
 
-	"bitbucket.org/everymind/gronos/dao"
-	"bitbucket.org/everymind/gronos/push"
+	"bitbucket.org/everymind/evmd-gronos/dao"
+	"bitbucket.org/everymind/evmd-gronos/push"
 )
 
 // Run é onde se inicia o processo

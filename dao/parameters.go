@@ -1,8 +1,8 @@
 package dao
 
 import (
-	"bitbucket.org/everymind/gopkgs/db"
-	dd "bitbucket.org/everymind/gopkgs/db/dao"
+	"bitbucket.org/everymind/evmd-golib/db"
+	dd "bitbucket.org/everymind/evmd-golib/db/dao"
 	"github.com/pkg/errors"
 )
 

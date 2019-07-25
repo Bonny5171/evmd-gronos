@@ -4,12 +4,12 @@ import (
 	"os"
 	"time"
 
-	"bitbucket.org/everymind/gopkgs/logger"
+	"bitbucket.org/everymind/evmd-golib/logger"
 
 	faktory "github.com/contribsys/faktory/client"
 	"github.com/pkg/errors"
 
-	"bitbucket.org/everymind/gronos/model"
+	"bitbucket.org/everymind/evmd-gronos/model"
 )
 
 // Send envia um push de job para o Faktory
