@@ -6,7 +6,7 @@ OS        = linux
 ARCH      = amd64
 APPNAME   = gronos
 IMAGE     = evmd-gronos
-VERSION   = 1.0.0
+VERSION   = 1.0.1
 
 clean:
 	@go clean -i -x ./...
