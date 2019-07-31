@@ -1,5 +1,5 @@
-bitbucket.org/everymind/evmd-golib v1.0.0 h1:xj76EJdMsD+3GluZMJwH6PWIp9k8YPdpvOZdyqqCXWc=
-bitbucket.org/everymind/evmd-golib v1.0.0/go.mod h1:L6hQZhPROAz0Uow1I3nZjt/wotArEt+oAJGa1DK6vRI=
+bitbucket.org/everymind/evmd-golib v1.0.1 h1:tewb+kx+ili4m65aZQ5yPVNNdsvvVc1N+QhN8pELwDE=
+bitbucket.org/everymind/evmd-golib v1.0.1/go.mod h1:L6hQZhPROAz0Uow1I3nZjt/wotArEt+oAJGa1DK6vRI=
 bitbucket.org/everymind/gforce v1.1.7/go.mod h1:aEkW0tmDfHEHBNZedO4tszyBP5OZgPpeAaaP7VVuw/A=
 bitbucket.org/pkg/inflect v0.0.0-20130829110746-8961c3750a47/go.mod h1:8Rt8gHhG+tKz8P3SoEzL/ZNVl25fPhMFKItv5HLIdtY=
 github.com/besser/cron v0.0.0-20180914024352-a4c204565f8d h1:q64IhtqV+iiSW4MYnoG90r/MqOMUEEck3RAFB09giHo=
