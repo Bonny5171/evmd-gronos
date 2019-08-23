@@ -9,9 +9,9 @@ import (
 
 // GetSchedules retorna todos os 'jobs' agendados que deverão ser executadas
 func GetSchedules() (s []model.JobScheduler, err error) {
-	conn, err := db.GetConnection("DATA")
+	conn, err := db.GetConnection("CONFIG")
 	if err != nil {
-		return nil, errors.Wrap(err, "db.GetConnection('DATA')")
+		return nil, errors.Wrap(err, "db.GetConnection('CONFIG')")
 	}
 
 	const query = `

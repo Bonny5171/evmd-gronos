@@ -38,27 +38,19 @@ func main() {
 
 	os.Setenv("GOTRACE", strconv.FormatBool(Trace))
 
-	if len(os.Getenv("GRONOS_DATABASE_CONFIG_DSN")) == 0 {
-		logger.Fatalln("Environment variable 'GRONOS_DATABASE_CONFIG_DSN' not defined!")
-	}
-
 	if len(os.Getenv("GRONOS_DATABASE_DSN")) == 0 {
 		logger.Fatalln("Environment variable 'GRONOS_DATABASE_DSN' not defined!")
-	}
-
-	if len(os.Getenv("GRONOS_STACK_NAME")) == 0 {
-		logger.Fatalln("Environment variable 'GRONOS_STACK_NAME' not defined!")
 	}
 
 	if len(os.Getenv("GRONOS_SCHEDULE")) == 0 {
 		os.Setenv("GRONOS_SCHEDULE", "@every 30s")
 	}
 
-	logger.Traceln("Openning conncetion with DBs...")
+	if len(os.Getenv("KEY")) == 0 {
+		logger.Fatalln("Environment variable 'KEY' not defined!")
+	}
 
-	// Getting DSN
-	cfgDSN := os.Getenv("GRONOS_DATABASE_CONFIG_DSN")
-	dtaDSN := os.Getenv("GRONOS_DATABASE_DSN")
+	logger.Traceln("Openning conncetion with DBs...")
 
 	// DB conn variables
 	var (
@@ -85,25 +77,17 @@ func main() {
 		}
 	}
 
-	// Starting config DB connection
-	if err := db.Connections.Connect("CONFIG", &db.PostgresDB{
-		ConnectionStr: cfgDSN,
-		MaxOpenConns:  dbMaxOpenConns,
-		MaxIdleConns:  dbMaxIdleConns,
-		MaxLifetime:   dbMaxLifeTime,
-	}); err != nil {
-		logger.Infof("DSN: %s\n", cfgDSN)
-		logger.Errorln(err)
-	}
+	// Getting DSN
+	dsn := os.Getenv("GRONOS_DATABASE_DSN")
 
 	// Starting config DB connection
-	if err := db.Connections.Connect("DATA", &db.PostgresDB{
-		ConnectionStr: dtaDSN,
-		MaxLifetime:   dbMaxLifeTime,
-		MaxIdleConns:  dbMaxIdleConns,
+	if err := db.Connections.Connect("CONFIG", &db.PostgresDB{
+		ConnectionStr: dsn,
 		MaxOpenConns:  dbMaxOpenConns,
+		MaxIdleConns:  dbMaxIdleConns,
+		MaxLifetime:   dbMaxLifeTime,
 	}); err != nil {
-		logger.Infof("DSN: %s\n", dtaDSN)
+		logger.Infof("DSN: %s\n", dsn)
 		logger.Errorln(err)
 	}
 

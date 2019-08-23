@@ -6,44 +6,49 @@ OS        = linux
 ARCH      = amd64
 APPNAME   = gronos
 IMAGE     = evmd-gronos
-VERSION   = 1.0.1
+VERSION   = $$(go run *.go -V)
+
+build:
+	@GOOS=$(OS) GOARCH=$(ARCH) $(GOBUILD) -o tmp/$(APPNAME) *.go
 
 clean:
 	@go clean -i -x ./...
 	@rm -rf tmp
 
 get:
-	@go mod vendor
+	@GO111MODULE=on go mod download
+
+vendor:
+	@GO111MODULE=on go mod vendor
 
 run:
 	@source .env
-	@go run app/*.go
-
-build:
-	@GOOS=$(OS) GOARCH=$(ARCH) $(GOBUILD) -o tmp/$(APPNAME) app/*.go
+	@go run *.go
 
 docker-auth:
 	@gcloud auth configure-docker
-
-docker-clean:
-	@docker rmi -f $$(docker images $(IMAGE) --format "{{.ID}}" | sort --unique)
 
 docker-build:
 	@docker build \
 		-t $(IMAGE):$(VERSION) \
 		-t $(IMAGE):latest . 
 
-docker-tags:
-	@docker tag $(IMAGE) gcr.io/$(GCPROJECT)/$(IMAGE):$(VERSION)
-	@docker tag $(IMAGE) gcr.io/$(GCPROJECT)/$(IMAGE):latest
-	@gcloud container images untag gcr.io/$(GCPROJECT)/$(IMAGE):latest --quiet
+docker-clean:
+	@docker rmi -f $$(docker images $(IMAGE) --format "{{.ID}}" | sort --unique)
+	@docker rmi $$(docker images --filter "dangling=true" -q)
 
-docker-publish:
+docker-delete:
+	@gcloud container images delete gcr.io/$(GCPROJECT)/$(IMAGE):$(VERSION) --force-delete-tags
+
+docker-push:
 	@docker push gcr.io/$(GCPROJECT)/$(IMAGE):$(VERSION)
 	@docker push gcr.io/$(GCPROJECT)/$(IMAGE):latest
 
-docker-unpublish:
-	@gcloud container images delete gcr.io/$(GCPROJECT)/$(IMAGE):$(VERSION) --force-delete-tags
+docker-publish: docker-build docker-tags docker-push docker-clean
+
+docker-tags:
+	@docker tag $(IMAGE) gcr.io/$(GCPROJECT)/$(IMAGE):$(VERSION)
+	@docker tag $(IMAGE) gcr.io/$(GCPROJECT)/$(IMAGE):latest
 
 docker-up:
 	@docker-compose up -d
@@ -51,7 +56,7 @@ docker-up:
 docker-down:
 	@docker-compose down
 
-tag:
+gittag:
 	@git tag v$(VERSION) && git push --tags || :
 
 default: build
