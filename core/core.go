@@ -1,12 +1,15 @@
 package core
 
 import (
+	"fmt"
+	"os"
 	"time"
 
 	"bitbucket.org/everymind/evmd-golib/logger"
 	"bitbucket.org/everymind/evmd-golib/utils"
 	"github.com/besser/cron"
 	"github.com/pkg/errors"
+	"github.com/spf13/cast"
 
 	"bitbucket.org/everymind/evmd-gronos/dao"
 	"bitbucket.org/everymind/evmd-gronos/push"
@@ -14,8 +17,13 @@ import (
 
 // Run é onde se inicia o processo
 func Run(c *cron.Cron) error {
+	var (
+		tenantID = cast.ToInt(os.Getenv("TENANT_ID"))
+		key      = os.Getenv("KEY")
+	)
+
 	// Recupera todas os 'jobs' que deverão ser executados
-	jobs, err := dao.GetSchedules()
+	jobs, err := dao.GetSchedules(tenantID, key)
 	if err != nil {
 		return errors.Wrap(err, "dao.GetSchedules()")
 	}
@@ -24,7 +32,7 @@ func Run(c *cron.Cron) error {
 		for _, j := range jobs {
 			var insert bool
 
-			entryName := utils.RemoveSpacesAndLower(j.TenantName) + "_" + j.Name
+			entryName := fmt.Sprintf("%s_%s_%s_%s", utils.RemoveSpacesAndLower(j.TenantName), utils.RemoveSpacesAndLower(j.MiddlewareName), utils.RemoveSpacesAndLower(j.JobName), utils.RemoveSpacesAndLower(j.FuncName))
 			entry := c.EntryName(entryName)
 
 			if entry.ID > 0 {

@@ -1,7 +1,6 @@
 package push
 
 import (
-	"os"
 	"time"
 
 	"bitbucket.org/everymind/evmd-golib/logger"
@@ -27,7 +26,7 @@ func Send(s model.JobScheduler) error {
 		s.ID,
 		s.TenantID,
 		s.TenantName,
-		os.Getenv("GRONOS_STACK_NAME"),
+		s.MiddlewareName,
 		s.AllowsConcurrency,
 		s.AllowsSchedule,
 		s.ScheduleTime,
@@ -42,15 +41,15 @@ func Send(s model.JobScheduler) error {
 	job.Retry = int(s.Retry)
 
 	job.Custom = map[string]interface{}{
-		"dsn":   os.Getenv("GRONOS_DATABASE_DSN"),
-		"stack": os.Getenv("GRONOS_STACK_NAME"),
+		"dsn":   s.DSN,
+		"stack": s.MiddlewareName,
 	}
 
 	if err = cl.Push(job); err != nil {
 		return errors.Wrap(err, "cl.Push(job)")
 	}
 
-	logger.Tracef("Job '%s(%v)' pushed to Faktory on queue '%s'", s.JobName, params, s.Queue)
+	logger.Tracef("Job '%s', Function: '%s', Stack: '%s', Params: '%v' pushed to Faktory on queue '%s'", s.JobName, s.FuncName, s.MiddlewareName, params, s.Queue)
 
 	return nil
 }

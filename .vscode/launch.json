@@ -16,7 +16,7 @@
             "env": {
                 "FAKTORY_URL": "tcp://localhost:7419",
                 "GRONOS_SCHEDULE": "@every 5s", // By default this value is "@every 30s"
-                "GRONOS_DATABASE_DSN": "host=localhost port=30010 sslmode=disable dbname=sfa_config user=postgres password=@123456",
+                "GRONOS_DATABASE_DSN": "host=localhost port=54310 sslmode=disable dbname=sfa_config user=postgres password=p0st@gr3s",
                 "KEY": "4w9jKlV1xy0"
             },
             "args": [],
