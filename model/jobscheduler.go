@@ -8,20 +8,21 @@ type JobScheduler struct {
 	ID                int64          `db:"id"`
 	TenantID          int            `db:"tenant_id"`
 	TenantName        string         `db:"tenant_name"`
-	Name              string         `db:"name"`
-	Queue             string         `db:"queue"`
+	MiddlewareID      int16          `db:"middleware_id"`
+	MiddlewareName    string         `db:"middleware_name"`
+	DSN               string         `db:"dsn"`
 	JobName           string         `db:"job_name"`
+	FuncName          string         `db:"function_name"`
+	Queue             string         `db:"queue"`
+	Cron              string         `db:"cron"`
 	Parameters        sql.NullString `db:"parameters"` // In DB is JSONB
 	Retry             int16          `db:"retry"`
-	Description       sql.NullString `db:"description"`
-	Cron              string         `db:"cron"`
-	OrgID             string         `db:"org_id"`
 	AllowsConcurrency bool           `db:"allows_concurrency"`
 	AllowsSchedule    bool           `db:"allows_schedule"`
 	ScheduleTime      int16          `db:"schedule_time"`
-	DocMetaData       sql.NullString `db:"doc_meta_data"` // In DB is JSONB
 	IsActive          bool           `db:"is_active"`
 	IsDeleted         bool           `db:"is_deleted"`
+	OrgID             string         `db:"org_id"`
 }
 
 func (s JobScheduler) Copy() JobScheduler {
@@ -29,19 +30,20 @@ func (s JobScheduler) Copy() JobScheduler {
 		ID:                s.ID,
 		TenantID:          s.TenantID,
 		TenantName:        s.TenantName,
-		Name:              s.Name,
-		Queue:             s.Queue,
+		MiddlewareID:      s.MiddlewareID,
+		MiddlewareName:    s.MiddlewareName,
+		DSN:               s.DSN,
 		JobName:           s.JobName,
+		FuncName:          s.FuncName,
+		Queue:             s.Queue,
+		Cron:              s.Cron,
 		Parameters:        s.Parameters,
 		Retry:             s.Retry,
-		Description:       s.Description,
-		Cron:              s.Cron,
-		OrgID:             s.OrgID,
 		AllowsConcurrency: s.AllowsConcurrency,
 		AllowsSchedule:    s.AllowsSchedule,
 		ScheduleTime:      s.ScheduleTime,
-		DocMetaData:       s.DocMetaData,
 		IsActive:          s.IsActive,
 		IsDeleted:         s.IsDeleted,
+		OrgID:             s.OrgID,
 	}
 }
