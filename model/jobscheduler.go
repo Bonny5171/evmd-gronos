@@ -8,8 +8,8 @@ type JobScheduler struct {
 	ID                int64          `db:"id"`
 	TenantID          int            `db:"tenant_id"`
 	TenantName        string         `db:"tenant_name"`
-	MiddlewareID      int16          `db:"middleware_id"`
-	MiddlewareName    string         `db:"middleware_name"`
+	StackID           int16          `db:"stack_id"`
+	StackName         string         `db:"stack_name"`
 	DSN               string         `db:"dsn"`
 	JobName           string         `db:"job_name"`
 	FuncName          string         `db:"function_name"`
@@ -30,8 +30,8 @@ func (s JobScheduler) Copy() JobScheduler {
 		ID:                s.ID,
 		TenantID:          s.TenantID,
 		TenantName:        s.TenantName,
-		MiddlewareID:      s.MiddlewareID,
-		MiddlewareName:    s.MiddlewareName,
+		StackID:           s.StackID,
+		StackName:         s.StackName,
 		DSN:               s.DSN,
 		JobName:           s.JobName,
 		FuncName:          s.FuncName,

@@ -25,8 +25,8 @@ func GetSchedules(tenantID int, key string) (s []model.JobScheduler, err error) 
 		SELECT j.id, 
 			j.tenant_id, 
 			t."name" AS tenant_name, 
-			j.middleware_id,
-			m."name" AS middleware_name,
+			j.stack_id,
+			m."name" AS stack_name,
 			convert_from(decrypt(m.dsn::bytea,$1,'bf'),'SQL_ASCII') dsn,
 			j.job_name,
 			j.function_name,
@@ -42,7 +42,7 @@ func GetSchedules(tenantID int, key string) (s []model.JobScheduler, err error) 
 			t.org_id
 		FROM public.job_scheduler j
 		INNER JOIN public.tenant t ON j.tenant_id = t.id
-		INNER JOIN public.middleware m ON j.middleware_id = m.id`)
+		INNER JOIN public.stack  m ON j.stack_id = m.id`)
 
 	if tenantID > 0 {
 		query.WriteString(" WHERE j.tenant_id = $2")
