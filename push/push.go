@@ -36,7 +36,7 @@ func Send(s model.JobScheduler) error {
 		params = append(params, s.Parameters.String)
 	}
 
-	job := faktory.NewJob(s.JobName, params...)
+	job := faktory.NewJob(s.FuncName, params...)
 	job.Queue = s.Queue
 	job.Retry = int(s.Retry)
 
