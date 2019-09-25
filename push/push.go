@@ -26,7 +26,7 @@ func Send(s model.JobScheduler) error {
 		s.ID,
 		s.TenantID,
 		s.TenantName,
-		s.MiddlewareName,
+		s.StackName,
 		s.AllowsConcurrency,
 		s.AllowsSchedule,
 		s.ScheduleTime,
@@ -42,14 +42,14 @@ func Send(s model.JobScheduler) error {
 
 	job.Custom = map[string]interface{}{
 		"dsn":   s.DSN,
-		"stack": s.MiddlewareName,
+		"stack": s.StackName,
 	}
 
 	if err = cl.Push(job); err != nil {
 		return errors.Wrap(err, "cl.Push(job)")
 	}
 
-	logger.Tracef("Job '%s', Function: '%s', Stack: '%s', Params: '%v' pushed to Faktory on queue '%s'", s.JobName, s.FuncName, s.MiddlewareName, params, s.Queue)
+	logger.Tracef("Job '%s', Function: '%s', Stack: '%s', Params: '%v' pushed to Faktory on queue '%s'", s.JobName, s.FuncName, s.StackName, params, s.Queue)
 
 	return nil
 }

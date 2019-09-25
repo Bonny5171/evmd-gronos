@@ -9,7 +9,7 @@ IMAGE     = evmd-gronos
 VERSION   = $$(go run app/*.go -V)
 
 build:
-	@GOOS=$(OS) GOARCH=$(ARCH) $(GOBUILD) -o tmp/$(APPNAME) *.go
+	@GOOS=$(OS) GOARCH=$(ARCH) $(GOBUILD) -o tmp/$(APPNAME) app/*.go
 
 clean:
 	@go clean -i -x ./...
