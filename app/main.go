@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 	"runtime"
@@ -28,11 +27,6 @@ func init() {
 func main() {
 	// Starting flags
 	StartFlags()
-
-	if Version {
-		fmt.Printf("Version: %s\n", VERSION)
-		os.Exit(0)
-	}
 
 	logger.Tracef("-> Starting gronos service version %s (%s)", VERSION, runtime.Version())
 
