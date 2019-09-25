@@ -6,7 +6,7 @@ OS        = linux
 ARCH      = amd64
 APPNAME   = gronos
 IMAGE     = evmd-gronos
-VERSION   = $$(go run *.go -V)
+VERSION   = $$(go run app/*.go -V)
 
 build:
 	@GOOS=$(OS) GOARCH=$(ARCH) $(GOBUILD) -o tmp/$(APPNAME) *.go
