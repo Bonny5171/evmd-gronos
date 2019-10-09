@@ -16,7 +16,7 @@
             "env": {
                 "FAKTORY_URL": "tcp://localhost:7419",
                 "GRONOS_SCHEDULE": "@every 5s", // By default this value is "@every 30s"
-                "GRONOS_DATABASE_DSN": "host=localhost port=54310 sslmode=disable dbname=sfa_config user=postgres password=p0st@gr3s",
+                "GRONOS_DATABASE_DSN": "host=localhost port=30010 sslmode=disable dbname=sfa_config_dev user=postgres password=p0st@gr3s",
                 "KEY": "4w9jKlV1xy0"
             },
             "args": [],
@@ -32,9 +32,9 @@
             "host": "127.0.0.1",
             "program": "${workspaceRoot}/app/main.go",
             "env": {
-                "FAKTORY_URL": "tcp://:F4kt0ry2019@35.238.202.211:7419",
+                "FAKTORY_URL": "tcp://localhost:7419",
                 "GRONOS_SCHEDULE": "@every 5s", // By default this value is "@every 30s"
-                "GRONOS_DATABASE_DSN": "host=127.0.0.1 port=54320 sslmode=disable dbname=sfa_config user=postgres password=p0st@gr3s",
+                "GRONOS_DATABASE_DSN": "host=localhost port=30010 sslmode=disable dbname=sfa_config_qa user=postgres password=p0st@gr3s",
                 "KEY": "4w9jKlV1xy0"
             },
             "args": [],
