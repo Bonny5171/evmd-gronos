@@ -24,6 +24,7 @@ func Send(s model.JobScheduler) error {
 
 	params := []interface{}{
 		s.ID,
+		s.JobName,
 		s.TenantID,
 		s.TenantName,
 		s.StackName,
