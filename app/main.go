@@ -40,10 +40,6 @@ func main() {
 		os.Setenv("GRONOS_SCHEDULE", "@every 30s")
 	}
 
-	if len(os.Getenv("KEY")) == 0 {
-		logger.Fatalln("Environment variable 'KEY' not defined!")
-	}
-
 	logger.Traceln("Openning conncetion with DBs...")
 
 	// DB conn variables

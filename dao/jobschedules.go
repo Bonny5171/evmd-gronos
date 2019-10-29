@@ -1,25 +1,30 @@
 package dao
 
 import (
+	"os"
 	"strings"
 
 	"bitbucket.org/everymind/evmd-golib/db"
 	"github.com/pkg/errors"
+	"github.com/spf13/cast"
 
 	"bitbucket.org/everymind/evmd-gronos/model"
 )
 
 // GetSchedules retorna todos os 'jobs' agendados que deverão ser executadas
-func GetSchedules(tenantID int, key string) (s []model.JobScheduler, err error) {
+func GetSchedules(tenantID int) (s []model.JobScheduler, err error) {
 	conn, err := db.GetConnection("CONFIG")
 	if err != nil {
 		return nil, errors.Wrap(err, "db.GetConnection('CONFIG')")
 	}
 
-	var (
-		params = []interface{}{key}
-		query  = strings.Builder{}
-	)
+	tenantType := "JOB"
+	if cast.ToBool(os.Getenv("DEBUG")) {
+		tenantType = "DEBUG"
+	}
+
+	params := []interface{}{tenantType}
+	query := strings.Builder{}
 
 	query.WriteString(`
 		SELECT j.id, 
@@ -27,7 +32,7 @@ func GetSchedules(tenantID int, key string) (s []model.JobScheduler, err error) 
 			t."name" AS tenant_name, 
 			j.stack_id,
 			m."name" AS stack_name,
-			convert_from(decrypt(m.dsn::bytea,$1,'bf'),'SQL_ASCII') dsn,
+			d.string AS dsn,
 			j.job_name,
 			j.function_name,
 			j.queue,
@@ -42,7 +47,8 @@ func GetSchedules(tenantID int, key string) (s []model.JobScheduler, err error) 
 			t.org_id
 		FROM public.job_scheduler j
 		INNER JOIN public.tenant t ON j.tenant_id = t.id
-		INNER JOIN public.stack  m ON j.stack_id = m.id`)
+		INNER JOIN public.stack  m ON j.stack_id = m.id AND m.is_active = TRUE AND m.is_deleted = FALSE
+		INNER JOIN public.dsn    d ON m.id = d.stack_id AND upper(d."type") = $1`)
 
 	if tenantID > 0 {
 		query.WriteString(" WHERE j.tenant_id = $2")
