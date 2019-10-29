@@ -17,13 +17,10 @@ import (
 
 // Run é onde se inicia o processo
 func Run(c *cron.Cron) error {
-	var (
-		tenantID = cast.ToInt(os.Getenv("TENANT_ID"))
-		key      = os.Getenv("KEY")
-	)
+	tenantID := cast.ToInt(os.Getenv("TENANT_ID"))
 
 	// Recupera todas os 'jobs' que deverão ser executados
-	jobs, err := dao.GetSchedules(tenantID, key)
+	jobs, err := dao.GetSchedules(tenantID)
 	if err != nil {
 		return errors.Wrap(err, "dao.GetSchedules()")
 	}
