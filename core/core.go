@@ -29,7 +29,7 @@ func Run(c *cron.Cron) error {
 		for _, j := range jobs {
 			var insert bool
 
-			entryName := fmt.Sprintf("%s_%s_%s_%s", utils.RemoveSpacesAndLower(j.TenantName), utils.RemoveSpacesAndLower(j.StackName), utils.RemoveSpacesAndLower(j.JobName), utils.RemoveSpacesAndLower(j.FuncName))
+			entryName := fmt.Sprintf("%03d_%s_%s_%s", j.TenantID, utils.RemoveSpacesAndLower(j.StackName), utils.RemoveSpacesAndLower(j.JobName), utils.RemoveSpacesAndLower(j.FuncName))
 			entry := c.EntryName(entryName)
 
 			if entry.ID > 0 {

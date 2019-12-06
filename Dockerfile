@@ -1,7 +1,7 @@
 ###############
 # BUILDER     #
 ###############
-FROM golang:1.12.13-alpine3.10 AS builder
+FROM golang:1.12.14-alpine3.10 AS builder
 RUN apk --no-cache add ca-certificates git mercurial
 RUN git config --global url."https://everyminddev:VJN45xFcjXudwBbTG6vU@bitbucket.org/everymind/".insteadOf https://bitbucket.org/everymind/
 COPY . /src
