@@ -23,6 +23,7 @@ type JobScheduler struct {
 	IsActive          bool           `db:"is_active"`
 	IsDeleted         bool           `db:"is_deleted"`
 	OrgID             string         `db:"org_id"`
+	AppEngineName     string         `db:"appengine_name"`
 }
 
 func (s JobScheduler) Copy() JobScheduler {
@@ -45,5 +46,6 @@ func (s JobScheduler) Copy() JobScheduler {
 		IsActive:          s.IsActive,
 		IsDeleted:         s.IsDeleted,
 		OrgID:             s.OrgID,
+		AppEngineName:     s.AppEngineName,
 	}
 }

@@ -44,7 +44,8 @@ func GetSchedules(tenantID int) (s []model.JobScheduler, err error) {
 			j.schedule_time, 
 			j.is_active, 
 			j.is_deleted, 
-			t.org_id
+			t.org_id,
+			t.appengine_name
 		FROM public.job_scheduler j
 		INNER JOIN public.tenant t ON j.tenant_id = t.id
 		INNER JOIN public.stack  m ON j.stack_id = m.id AND m.is_active = TRUE AND m.is_deleted = FALSE

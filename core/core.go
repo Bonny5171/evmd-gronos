@@ -1,8 +1,12 @@
 package core
 
 import (
+	"context"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"bitbucket.org/everymind/evmd-golib/logger"
@@ -10,6 +14,8 @@ import (
 	"github.com/besser/cron"
 	"github.com/pkg/errors"
 	"github.com/spf13/cast"
+	"golang.org/x/oauth2/google"
+	"google.golang.org/api/compute/v1"
 
 	"bitbucket.org/everymind/evmd-gronos/dao"
 	"bitbucket.org/everymind/evmd-gronos/push"
@@ -48,11 +54,14 @@ func Run(c *cron.Cron) error {
 
 			if insert {
 				s := j.Copy()
+				appName := j.AppEngineName
 
 				// Anonymous function
 				fn := func() {
+					pingJob(appName)
+
 					if err := push.Send(s); err != nil {
-						logger.Errorln(errors.Wrap(err, "push.LoadAndPush()"))
+						logger.Errorln(errors.Wrap(err, "push.Send()"))
 					}
 				}
 
@@ -91,4 +100,27 @@ func Run(c *cron.Cron) error {
 	}
 
 	return nil
+}
+
+func pingJob(appEngineName string) {
+	ctx := context.Background()
+	credentials, err := google.FindDefaultCredentials(ctx, compute.ComputeScope)
+	if err != nil {
+		logger.Errorln(errors.Wrap(err, "google.FindDefaultCredentials()"))
+	}
+
+	var sb strings.Builder
+	sb.WriteString("https://")
+	sb.WriteString(appEngineName)
+	sb.WriteString("-dot-")
+	sb.WriteString(credentials.ProjectID)
+	sb.WriteString(".appspot.com/_ah/start")
+
+	response, err := http.Get(sb.String())
+	if err != nil {
+		logger.Errorln(errors.Wrap(err, "http.Get()"))
+	}
+
+	data, _ := ioutil.ReadAll(response.Body)
+	logger.Infoln("ping job: " + string(data))
 }
