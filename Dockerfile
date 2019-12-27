@@ -7,7 +7,7 @@ RUN git config --global url."https://everyminddev:VJN45xFcjXudwBbTG6vU@bitbucket
 COPY . /src
 WORKDIR /src
 RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/gronos ./app/*.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/gronos ./*.go
 RUN cp $(go env | grep GOROOT | sed 's/GOROOT=//g' | sed 's/"//g')/lib/time/zoneinfo.zip /app/zoneinfo.zip
 
 ###############

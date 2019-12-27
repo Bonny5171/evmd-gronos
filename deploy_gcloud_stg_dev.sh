@@ -1,0 +1,1 @@
+gcloud app deploy app.stg.dev.yaml --quiet --version=${$(go run *.go -V)//./-}

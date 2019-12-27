@@ -1,0 +1,23 @@
+runtime: go112
+
+service: gronos-stg-dev
+
+instance_class: B1
+
+manual_scaling:
+  instances: 1
+
+health_check:
+  enable_health_check: False
+
+inbound_services:
+  - warmup
+
+env_variables:
+  GRONOS_DATABASE_DSN: "host=/cloudsql/evmdsfa:southamerica-east1:evmd-sfa-db-dev port=5432 sslmode=require dbname=sfa_config_dev user=postgres password=p0st@gr3s"
+  GRONOS_DATABASE_MAXOPENCONNS: "5"
+  GRONOS_DATABASE_MAXIDLECONNS: "1"
+  GRONOS_DATABASE_MAXLIFETIME: "3"
+  GRONOS_SCHEDULE: "@every 5s"
+  FAKTORY_URL: "tcp://:F4kt0ry2019@34.95.248.48:7419"
+

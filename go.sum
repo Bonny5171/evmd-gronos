@@ -1,6 +1,6 @@
-bitbucket.org/everymind/evmd-golib v1.5.1 h1:k7c+grZWLX2Mjs94T+o1mtmeqjG0sExvGc6J6Ai58js=
-bitbucket.org/everymind/evmd-golib v1.5.1/go.mod h1:WHsVIORFxv3aaPZw9GbNOzQG5Nw2+KFZzgPuhkiseSM=
-bitbucket.org/everymind/gforce v1.3.3/go.mod h1:H5dXtjuxpVQpKUXMym9UUpWOI7mBC5DnVjSEeaOC+z8=
+bitbucket.org/everymind/evmd-golib v1.5.4 h1:7ZEBj4fdLSkGPRWxGcj8BCpZWnbp/j4nZCQ0ijpBKHw=
+bitbucket.org/everymind/evmd-golib v1.5.4/go.mod h1:UImYCJ2HeH9+dzvP0YWl68G/rzx1osXqOumcaoGHeGw=
+bitbucket.org/everymind/gforce v1.3.5/go.mod h1:H5dXtjuxpVQpKUXMym9UUpWOI7mBC5DnVjSEeaOC+z8=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/apex/log v1.1.0/go.mod h1:yA770aXIDQrhVOIGurT/pVdfCpSq1GQV/auzMN5fzvY=
 github.com/benbjohnson/ego v0.3.0/go.mod h1:6Qzj43pKX58WdlHDZKZS4Q/XXYwz6toIqXqNjzt4mNA=
@@ -23,6 +23,8 @@ github.com/go-redis/redis v0.0.0-20181009075230-daf101bd7905/go.mod h1:NAIEuMOZ/
 github.com/go-sql-driver/mysql v1.4.0 h1:7LxgVwFb2hIQtMm87NdgAVfXjnt4OePseqT1tKx+opk=
 github.com/go-sql-driver/mysql v1.4.0/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=
 github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
+github.com/gorilla/mux v1.7.3 h1:gnP5JzjVOuiZD07fKKToCAOjS0yOpj/qPETTXCCS6hw=
+github.com/gorilla/mux v1.7.3/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
 github.com/jmoiron/sqlx v1.2.1-0.20190826204134-d7d95172beb5 h1:lrdPtrORjGv1HbbEvKWDUAy97mPpFm4B8hp77tcCUJY=
 github.com/jmoiron/sqlx v1.2.1-0.20190826204134-d7d95172beb5/go.mod h1:1FEQNm3xlJgrMD+FBdI9+xvCksHtbpVBBw5dYhBSsks=
 github.com/jteeuwen/go-bindata v3.0.7+incompatible/go.mod h1:JVvhzYOiGBnFSYRyV00iY8q7/0PThjIYav1p9h5dmKs=

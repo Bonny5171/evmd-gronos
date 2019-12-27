@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -11,13 +11,13 @@ import (
 var (
 	Trace        bool
 	Version      bool
-	ShortVersion bool
+	BuildVersion bool
 )
 
 func init() {
 	flag.BoolVarP(&Trace, "trace", "t", true, "show trace log")
 	flag.BoolVarP(&Version, "version", "v", false, "show version")
-	flag.BoolVarP(&ShortVersion, "VERSION", "V", false, "show tiny version")
+	flag.BoolVarP(&BuildVersion, "VERSION", "V", false, "show build version")
 	flag.CommandLine.MarkHidden("VERSION")
 }
 
@@ -37,16 +37,6 @@ func Args() []string {
 func StartFlags() {
 	flag.Usage = showUsageFlags
 	flag.Parse()
-
-	if ShortVersion {
-		fmt.Print(VERSION)
-		os.Exit(0)
-	}
-
-	if Version {
-		fmt.Printf("Version: %s\n", VERSION)
-		os.Exit(0)
-	}
 }
 
 func showUsageFlags() {

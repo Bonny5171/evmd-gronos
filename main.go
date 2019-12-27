@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"os"
 	"os/signal"
 	"runtime"
@@ -11,8 +13,10 @@ import (
 	"bitbucket.org/everymind/evmd-golib/db"
 	"bitbucket.org/everymind/evmd-golib/logger"
 	"github.com/besser/cron"
+	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 
+	"bitbucket.org/everymind/evmd-gronos/cmd"
 	"bitbucket.org/everymind/evmd-gronos/core"
 )
 
@@ -26,11 +30,24 @@ func init() {
 
 func main() {
 	// Starting flags
-	StartFlags()
+	cmd.StartFlags()
+
+	if cmd.BuildVersion {
+		fmt.Print(VERSION)
+		os.Exit(0)
+	}
+
+	if cmd.Version {
+		fmt.Printf("Version: %s (%s)\n", VERSION, runtime.Version())
+		os.Exit(0)
+	}
 
 	logger.Tracef("-> Starting gronos service version %s (%s)", VERSION, runtime.Version())
 
-	os.Setenv("GOTRACE", strconv.FormatBool(Trace))
+	// Starting web server
+	startWebServer()
+
+	os.Setenv("GOTRACE", strconv.FormatBool(cmd.Trace))
 
 	if len(os.Getenv("GRONOS_DATABASE_DSN")) == 0 {
 		logger.Fatalln("Environment variable 'GRONOS_DATABASE_DSN' not defined!")
@@ -121,4 +138,31 @@ func startJob(c *cron.Cron) error {
 		return errors.Wrap(err, "core.Run()")
 	}
 	return nil
+}
+
+func startWebServer() {
+	go func() {
+		router := mux.NewRouter().StrictSlash(true)
+
+		router.HandleFunc("/_ah/health", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("ok"))
+		}).Methods("GET")
+
+		router.HandleFunc("/_ah/warmup", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("ok"))
+		}).Methods("GET")
+
+		router.HandleFunc("/_ah/start", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("ok"))
+		}).Methods("GET")
+
+		router.HandleFunc("/_ah/stop", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("ok"))
+		}).Methods("GET")
+
+		logger.Traceln("Starting HTTP server...")
+		if err := http.ListenAndServe(":8080", router); err != nil {
+			logger.Errorln(err)
+		}
+	}()
 }
