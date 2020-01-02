@@ -14,7 +14,7 @@ type JobScheduler struct {
 	JobName           string         `db:"job_name"`
 	FuncName          string         `db:"function_name"`
 	Queue             string         `db:"queue"`
-	Cron              string         `db:"cron"`
+	Cron              sql.NullString `db:"cron"`
 	Parameters        sql.NullString `db:"parameters"` // In DB is JSONB
 	Retry             int16          `db:"retry"`
 	AllowsConcurrency bool           `db:"allows_concurrency"`
@@ -23,7 +23,7 @@ type JobScheduler struct {
 	IsActive          bool           `db:"is_active"`
 	IsDeleted         bool           `db:"is_deleted"`
 	OrgID             string         `db:"org_id"`
-	AppEngineName     string         `db:"appengine_name"`
+	AppEngineName     sql.NullString `db:"appengine_name"`
 }
 
 func (s JobScheduler) Copy() JobScheduler {

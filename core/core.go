@@ -39,7 +39,7 @@ func Run(c *cron.Cron) error {
 			entry := c.EntryName(entryName)
 
 			if entry.ID > 0 {
-				if j.Cron != entry.Spec || !j.IsActive || j.IsDeleted {
+				if !j.Cron.Valid || j.Cron.String != entry.Spec || !j.IsActive || j.IsDeleted {
 					logger.Infof("Removing scheduled job '%s'", entry.Name)
 					c.Remove(entry.ID)
 					if !j.IsDeleted {
@@ -48,13 +48,19 @@ func Run(c *cron.Cron) error {
 						insert = j.IsActive
 					}
 				}
-			} else if j.IsActive && !j.IsDeleted {
+			} else if j.Cron.Valid && j.IsActive && !j.IsDeleted {
 				insert = true
 			}
 
 			if insert {
 				s := j.Copy()
-				appName := j.AppEngineName
+
+				if j.AppEngineName.Valid == false {
+					err = errors.New("AppEngineName not found")
+					return err
+				}
+
+				appName := j.AppEngineName.String
 
 				// Anonymous function
 				fn := func() {
@@ -69,7 +75,7 @@ func Run(c *cron.Cron) error {
 
 				var id cron.EntryID
 				if location == "UTC" {
-					id, err = c.AddFuncN(entryName, j.Cron, fn)
+					id, err = c.AddFuncN(entryName, j.Cron.String, fn)
 					if err != nil {
 						return err
 					}
@@ -80,7 +86,7 @@ func Run(c *cron.Cron) error {
 						logger.Warningf("The location '%s' is invalid, setting to UTC", location)
 						loc = time.UTC
 					}
-					id, err = c.AddFuncNLocation(entryName, j.Cron, loc, fn)
+					id, err = c.AddFuncNLocation(entryName, j.Cron.String, loc, fn)
 					if err != nil {
 						return err
 					}
@@ -119,6 +125,11 @@ func pingJob(appEngineName string) {
 	response, err := http.Get(sb.String())
 	if err != nil {
 		logger.Errorln(errors.Wrap(err, "http.Get()"))
+	}
+
+	if response.StatusCode/100 != 2 {
+		err := fmt.Errorf("job %s unavaliable", appEngineName)
+		logger.Errorln(err)
 	}
 
 	data, _ := ioutil.ReadAll(response.Body)
