@@ -1,6 +1,7 @@
 package push
 
 import (
+	"fmt"
 	"time"
 
 	"bitbucket.org/everymind/evmd-golib/logger"
@@ -42,7 +43,7 @@ func Send(s model.JobScheduler) error {
 	job.Retry = int(s.Retry)
 
 	job.Custom = map[string]interface{}{
-		"dsn":   s.DSN,
+		"dsn":   s.DSN + fmt.Sprintf(" application_name='%s'", s.JobName),
 		"stack": s.StackName,
 	}
 

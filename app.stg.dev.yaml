@@ -14,7 +14,7 @@ inbound_services:
   - warmup
 
 env_variables:
-  GRONOS_DATABASE_DSN: "host=/cloudsql/evmdsfa:southamerica-east1:evmd-sfa-db-dev port=5432 sslmode=require dbname=sfa_config_dev user=postgres password=p0st@gr3s"
+  GRONOS_DATABASE_DSN: "host=/cloudsql/evmdsfa:southamerica-east1:evmd-sfa-db-dev port=5432 sslmode=require dbname=sfa_config_dev user=postgres password=p0st@gr3s application_name='gronos'"
   GRONOS_DATABASE_MAXOPENCONNS: "5"
   GRONOS_DATABASE_MAXIDLECONNS: "1"
   GRONOS_DATABASE_MAXLIFETIME: "3"
