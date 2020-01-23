@@ -26,12 +26,15 @@ run:
 	@go run *.go
 
 gae-deploy-dev:
+	@gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa && gcloud config list
 	@gcloud app deploy app.stg.dev.yaml --version=$(subst .,-,$(shell go run *.go -V))
 
 gae-deploy-qa:
+	@gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa && gcloud config list
 	@gcloud app deploy app.stg.qa.yaml --version=$(subst .,-,$(shell go run *.go -V))
 
 gae-deploy-snd:
+	@gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa-snd && gcloud config list
 	@gcloud app deploy app.snd.yaml --version=$(subst .,-,$(shell go run *.go -V))
 	
 docker-auth:
