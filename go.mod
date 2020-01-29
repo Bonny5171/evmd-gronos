@@ -11,6 +11,6 @@ require (
 	github.com/spf13/pflag v1.0.5
 )
 
-replace bitbucket.org/everymind/evmd-golib => ./private/bitbucket.org/everymind/evmd-golib
+// replace bitbucket.org/everymind/evmd-golib => ./private/bitbucket.org/everymind/evmd-golib
 
-replace bitbucket.org/everymind/gforce => ./private/bitbucket.org/everymind/gforce
+// replace bitbucket.org/everymind/gforce => ./private/bitbucket.org/everymind/gforce

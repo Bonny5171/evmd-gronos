@@ -1,0 +1,12 @@
+private
+
+.env
+.gcloudignore
+.gitignore
+
+app.snd.yaml
+app.stg.dev.yaml
+
+cloudbuild.yaml
+
+README.md

@@ -11,7 +11,7 @@ ENV GO111MODULE=on
 ENV GOPROXY=https://proxy.golang.org/
 ENV GOPRIVATE=bitbucket.org/everymind
 RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/gronos ./*.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=`git tag --sort=-version:refname | head -n 1`" -o /app/gronos ./*.go
 RUN cp $(go env | grep GOROOT | sed 's/GOROOT=//g' | sed 's/"//g')/lib/time/zoneinfo.zip /app/zoneinfo.zip
 
 ###############
