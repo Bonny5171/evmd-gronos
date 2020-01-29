@@ -130,10 +130,12 @@ func pingJob(appEngineName string) {
 		logger.Errorln(fmt.Errorf("http.Get(): %w", err))
 	}
 
-	logger.Infof("ping to job '%s' at %s: %s", appEngineName, sb.String(), response.Status)
+	if response != nil {
+		logger.Infof("ping to job '%s' at %s: %s", appEngineName, sb.String(), response.Status)
 
-	if response.StatusCode/100 != 2 {
-		err := fmt.Errorf("job %s unavaliable", appEngineName)
-		logger.Errorln(err)
+		if response.StatusCode/100 != 2 {
+			err := fmt.Errorf("job %s unavaliable", appEngineName)
+			logger.Errorln(err)
+		}
 	}
 }
