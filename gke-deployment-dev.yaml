@@ -1,0 +1,47 @@
+# gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa && gcloud config list
+# gcloud container clusters get-credentials evmd-cluster-1
+# kubectl create secret generic faktory --from-literal=password=F4kt0ry2020
+# kubectl apply -f stacks/gcloud/dev/gke-deployment.yaml
+# kubectl get deployments && kubectl get pods && kubectl get services
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gronos
+  labels:
+    run: gronos
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 100%
+  template:
+    metadata:
+      labels:
+        run: gronos
+        name: gronos
+      annotations:
+        key: value
+    spec:
+      containers:
+        - name: gronos
+          image: 'gcr.io/evmdsfa/evmd-gronos:v2.5.0'
+          command: [ "/gronos"]
+          env:
+            - name: GRONOS_DATABASE_DSN
+              value: "host=35.247.240.103 port=5432 sslmode=require dbname=sfa_config_dev user=postgres password=p0st@gr3s"
+            - name: GRONOS_DATABASE_MAXOPENCONNS
+              value: "5"
+            - name: GRONOS_DATABASE_MAXIDLECONNS
+              value: "1"
+            - name: GRONOS_DATABASE_MAXLIFETIME
+              value: "3"
+            - name: GRONOS_SCHEDULE
+              value: "@every 5s"
+            - name: FAKTORY_URL
+              value: "tcp://:F4kt0ry2019@faktory:7419"
+            - name: KEY
+              value: "4w9jKlV1xy0"
+

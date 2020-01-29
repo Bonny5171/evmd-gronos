@@ -1,0 +1,79 @@
+# gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa-snd && gcloud config list
+# gcloud container clusters get-credentials evmd-cluster-1
+# kubectl create secret generic faktory --from-literal=password=CLameCupEREvOLDe
+# kubectl apply -f stacks/gcloud/snd/gke-deployment.yaml
+# kubectl get deployments && kubectl get pods && kubectl get services
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: faktory
+  labels:
+    run: faktory
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 100%
+  template:
+    metadata:
+      labels:
+        run: faktory
+        name: faktory
+      annotations:
+        key: value
+    spec:
+      containers:
+        - name: faktory
+          image: 'contribsys/faktory:1.2.0'
+          command: [ "/faktory"]
+          args: ["-w", ":7420", "-b", ":7419", "-e", "production"]
+          ports:
+            - containerPort: 7419
+            - containerPort: 7420
+          env:
+            - name: FAKTORY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: faktory
+                  key: password
+          volumeMounts:
+            - name: faktory-data
+              mountPath: /var/lib/faktory/db
+      volumes:
+        - name: faktory-data
+          persistentVolumeClaim:
+            claimName: faktory-data
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: faktory-loadbalance
+  labels:
+    run: faktory
+spec:
+  type: LoadBalancer
+  selector:
+    run: faktory
+  ports:
+  - name: network
+    protocol: TCP
+    port: 7419
+    targetPort: 7419
+  - name: webui
+    protocol: TCP
+    port: 7420
+    targetPort: 7420
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: faktory-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 60Gi

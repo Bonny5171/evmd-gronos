@@ -45,8 +45,6 @@ func main() {
 
 	logger.Tracef("-> Starting gronos service version %s (%s)", version, runtime.Version())
 
-	startWebServer()
-
 	os.Setenv("GOTRACE", strconv.FormatBool(cmd.Trace))
 
 	if len(os.Getenv("GRONOS_DATABASE_DSN")) == 0 {
@@ -146,49 +144,4 @@ func startJob(c *cron.Cron, sJobs map[string]core.ScheduledJob) error {
 		return fmt.Errorf("core.Run(): %w", err)
 	}
 	return nil
-}
-
-func startWebServer() {
-	go func() {
-		router := mux.NewRouter().StrictSlash(true)
-
-		router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			w.WriteHeader(200)
-			w.Write([]byte("ok"))
-		}).Methods("GET")
-
-		router.HandleFunc("/_ah/health", func(w http.ResponseWriter, r *http.Request) {
-			logger.Infoln("health check received")
-			w.WriteHeader(200)
-			w.Write([]byte("ok"))
-		}).Methods("GET")
-
-		router.HandleFunc("/_ah/warmup", func(w http.ResponseWriter, r *http.Request) {
-			logger.Infoln("warmup command received")
-			w.WriteHeader(200)
-			w.Write([]byte("ok"))
-		}).Methods("GET")
-
-		router.HandleFunc("/_ah/start", func(w http.ResponseWriter, r *http.Request) {
-			logger.Infoln("start command received")
-			w.WriteHeader(200)
-			w.Write([]byte("ok"))
-		}).Methods("GET")
-
-		router.HandleFunc("/_ah/stop", func(w http.ResponseWriter, r *http.Request) {
-			logger.Warningln("stop command received")
-			w.WriteHeader(200)
-			w.Write([]byte("ok"))
-		}).Methods("GET")
-
-		port := os.Getenv("PORT")
-		if len(port) == 0 {
-			port = "80"
-		}
-
-		logger.Traceln("Starting HTTP server...")
-		if err := http.ListenAndServe(":"+port, router); err != nil {
-			logger.Errorln(err)
-		}
-	}()
 }
