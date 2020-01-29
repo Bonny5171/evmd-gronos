@@ -3,9 +3,7 @@ package core
 import (
 	"errors"
 	"fmt"
-	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/robfig/cron/v3" // "github.com/besser/cron"
@@ -60,12 +58,12 @@ func Run(c *cron.Cron, sJobs map[string]ScheduledJob) error {
 			if insert {
 				s := j.Copy()
 
-				if j.AppEngineName.Valid == false {
+				if !j.AppEngineName.Valid {
 					err = errors.New("AppEngineName not found")
 					return err
 				}
 
-				appEngineName := j.AppEngineName.String
+				// appEngineName := j.AppEngineName.String
 
 				// Anonymous function
 				fn := func() {
@@ -73,7 +71,7 @@ func Run(c *cron.Cron, sJobs map[string]ScheduledJob) error {
 						logger.Errorln(fmt.Errorf("push.Send(): %w", err))
 					}
 
-					pingJob(appEngineName)
+					// pingJob(appEngineName)
 				}
 
 				location, _ := dao.GetParamByOrgID(j.OrgID, "ORG_TZ_LOCATION")
@@ -115,27 +113,27 @@ func Run(c *cron.Cron, sJobs map[string]ScheduledJob) error {
 	return nil
 }
 
-func pingJob(appEngineName string) {
-	cloudProject := os.Getenv("GOOGLE_CLOUD_PROJECT")
+// func pingJob(appEngineName string) {
+// 	cloudProject := os.Getenv("GOOGLE_CLOUD_PROJECT")
 
-	var sb strings.Builder
-	sb.WriteString("http://")
-	sb.WriteString(appEngineName)
-	sb.WriteString("-dot-")
-	sb.WriteString(cloudProject)
-	sb.WriteString(".appspot.com/")
+// 	var sb strings.Builder
+// 	sb.WriteString("http://")
+// 	sb.WriteString(appEngineName)
+// 	sb.WriteString("-dot-")
+// 	sb.WriteString(cloudProject)
+// 	sb.WriteString(".appspot.com/")
 
-	response, err := http.Get(sb.String())
-	if err != nil {
-		logger.Errorln(fmt.Errorf("http.Get(): %w", err))
-	}
+// 	response, err := http.Get(sb.String())
+// 	if err != nil {
+// 		logger.Errorln(fmt.Errorf("http.Get(): %w", err))
+// 	}
 
-	if response != nil {
-		logger.Infof("ping to job '%s' at %s: %s", appEngineName, sb.String(), response.Status)
+// 	if response != nil {
+// 		logger.Infof("ping to job '%s' at %s: %s", appEngineName, sb.String(), response.Status)
 
-		if response.StatusCode/100 != 2 {
-			err := fmt.Errorf("job %s unavaliable", appEngineName)
-			logger.Errorln(err)
-		}
-	}
-}
+// 		if response.StatusCode/100 != 2 {
+// 			err := fmt.Errorf("job %s unavaliable", appEngineName)
+// 			logger.Errorln(err)
+// 		}
+// 	}
+// }

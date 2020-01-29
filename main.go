@@ -157,29 +157,29 @@ func startWebServer() {
 			w.Write([]byte("ok"))
 		}).Methods("GET")
 
-		router.HandleFunc("/_ah/health", func(w http.ResponseWriter, r *http.Request) {
-			logger.Infoln("health check received")
-			w.WriteHeader(200)
-			w.Write([]byte("ok"))
-		}).Methods("GET")
+		// router.HandleFunc("/_ah/health", func(w http.ResponseWriter, r *http.Request) {
+		// 	logger.Infoln("health check received")
+		// 	w.WriteHeader(200)
+		// 	w.Write([]byte("ok"))
+		// }).Methods("GET")
 
-		router.HandleFunc("/_ah/warmup", func(w http.ResponseWriter, r *http.Request) {
-			logger.Infoln("warmup command received")
-			w.WriteHeader(200)
-			w.Write([]byte("ok"))
-		}).Methods("GET")
+		// router.HandleFunc("/_ah/warmup", func(w http.ResponseWriter, r *http.Request) {
+		// 	logger.Infoln("warmup command received")
+		// 	w.WriteHeader(200)
+		// 	w.Write([]byte("ok"))
+		// }).Methods("GET")
 
-		router.HandleFunc("/_ah/start", func(w http.ResponseWriter, r *http.Request) {
-			logger.Infoln("start command received")
-			w.WriteHeader(200)
-			w.Write([]byte("ok"))
-		}).Methods("GET")
+		// router.HandleFunc("/_ah/start", func(w http.ResponseWriter, r *http.Request) {
+		// 	logger.Infoln("start command received")
+		// 	w.WriteHeader(200)
+		// 	w.Write([]byte("ok"))
+		// }).Methods("GET")
 
-		router.HandleFunc("/_ah/stop", func(w http.ResponseWriter, r *http.Request) {
-			logger.Warningln("stop command received")
-			w.WriteHeader(200)
-			w.Write([]byte("ok"))
-		}).Methods("GET")
+		// router.HandleFunc("/_ah/stop", func(w http.ResponseWriter, r *http.Request) {
+		// 	logger.Warningln("stop command received")
+		// 	w.WriteHeader(200)
+		// 	w.Write([]byte("ok"))
+		// }).Methods("GET")
 
 		port := os.Getenv("PORT")
 		if len(port) == 0 {
