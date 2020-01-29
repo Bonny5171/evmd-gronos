@@ -1,4 +1,4 @@
-runtime: go112
+runtime: go113
 
 service: gronos
 
@@ -14,6 +14,9 @@ inbound_services:
   - warmup
 
 env_variables:
+  GO111MODULE: "on"
+  GOPROXY: "https://proxy.golang.org/"
+  GOPRIVATE: "bitbucket.org/everymind"
   GRONOS_DATABASE_DSN: "host=/cloudsql/evmdsfa-snd:southamerica-east1:evmdsfa-db-snd port=5432 sslmode=require dbname=sfa_config_snd user=postgres password=25C3z0bePyMo8zpe application_name='gronos'"
   GRONOS_DATABASE_MAXOPENCONNS: "5"
   GRONOS_DATABASE_MAXIDLECONNS: "1"

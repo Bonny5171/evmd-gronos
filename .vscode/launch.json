@@ -15,8 +15,10 @@
             "program": "${workspaceRoot}/main.go",
             "env": {
                 "FAKTORY_URL": "tcp://localhost:7419",
-                "GRONOS_SCHEDULE": "@every 5s", // By default this value is "@every 30s"
-                "GRONOS_DATABASE_DSN": "host=localhost port=54310 sslmode=disable dbname=sfa_config_dev user=postgres password=p0st@gr3s"
+                "GRONOS_SCHEDULE": "@every 5s", 
+                // "GRONOS_SCHEDULE": "CRON_TZ=America/Sao_Paulo 1 0 * * *", // By default this value is "@every 30s"
+                "GRONOS_DATABASE_DSN": "host=localhost port=54310 sslmode=disable dbname=sfa_config_dev user=postgres password=p0st@gr3s",
+                "GOOGLE_CLOUD_PROJECT": "evmdsfa"
             },
             "args": [],
             "showLog": true
@@ -33,7 +35,9 @@
             "env": {
                 "FAKTORY_URL": "tcp://localhost:7419",
                 "GRONOS_SCHEDULE": "@every 5s", // By default this value is "@every 30s"
-                "GRONOS_DATABASE_DSN": "host=localhost port=54320 sslmode=disable dbname=sfa_config user=postgres password=25C3z0bePyMo8zpe"
+                "GRONOS_DATABASE_DSN": "host=localhost port=54320 sslmode=disable dbname=sfa_config user=postgres password=25C3z0bePyMo8zpe",
+                "LOCATION": "America/Sao_Paulo",
+                "GOOGLE_CLOUD_PROJECT": "evmdsfa-snd"
             },
             "args": [],
             "showLog": true

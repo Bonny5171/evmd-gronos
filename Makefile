@@ -6,7 +6,7 @@ OS        = linux
 ARCH      = amd64
 APPNAME   = gronos
 IMAGE     = evmd-gronos
-VERSION   = $$(go run *.go -V)
+VERSION   = $$(go run -ldflags "-X main.version=`git tag --sort=-version:refname | head -n 1`" main.go -V)
 
 build:
 	@GOOS=$(OS) GOARCH=$(ARCH) $(GOBUILD) -o tmp/$(APPNAME) *.go
@@ -15,27 +15,20 @@ clean:
 	@go clean -i -x ./...
 	@rm -rf tmp
 
-get:
-	@GO111MODULE=on go mod download
-
-vendor:
-	@GO111MODULE=on go mod vendor
-
 run:
-	@source .env
-	@go run *.go
+	@source .env && go run -ldflags "-X main.version=`git tag --sort=-version:refname | head -n 1`" main.go
 
 gae-deploy-dev:
 	@gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa && gcloud config list
-	@gcloud app deploy app.stg.dev.yaml --version=$(subst .,-,$(shell go run *.go -V))
+	@gcloud app deploy app.stg.dev.yaml --version=$(subst .,-,$(shell go run -ldflags "-X main.version=`git tag --sort=-version:refname | head -n 1`" main.go -V))
 
 gae-deploy-qa:
 	@gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa && gcloud config list
-	@gcloud app deploy app.stg.qa.yaml --version=$(subst .,-,$(shell go run *.go -V))
+	@gcloud app deploy app.stg.qa.yaml --version=$(subst .,-,$(shell go run -ldflags "-X main.version=`git tag --sort=-version:refname | head -n 1`" main.go -V))
 
 gae-deploy-snd:
 	@gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa-snd && gcloud config list
-	@gcloud app deploy app.snd.yaml --version=$(subst .,-,$(shell go run *.go -V))
+	@gcloud app deploy app.snd.yaml --version=$(subst .,-,$(shell go run -ldflags "-X main.version=`git tag --sort=-version:refname | head -n 1`" main.go -V))
 	
 docker-auth:
 	@gcloud auth configure-docker
@@ -68,7 +61,14 @@ docker-up:
 docker-down:
 	@docker-compose down
 
-gittag:
-	@git tag v$(VERSION) && git push --tags || :
+git-merge-publish:
+	@git checkout master
+	@git merge develop
+	@git tag -a v$(VERSION) -m "Release v$(VERSION)"
+	@git checkout develop
+	@git push --all && git push --tags
+
+git-tag:
+	@git tag -a v$(VERSION) -m "Release v$(VERSION)"
 
 default: build

@@ -1,10 +1,10 @@
 # Gronos
 
-Serviço _cron_ para agendar _worker jobs_ no Faktory Server
+Serviço _cron_ foi criado para agendar _worker jobs_ no Faktory Server
 
 ### Requisitos
 
--   Go v1.12.0+ ([download e instruções de instalação e configuração](https://golang.org/dl))
+-   Go v1.13.0+ ([download e instruções de instalação e configuração](https://golang.org/dl))
 
 ### Criar diretório dos projetos da Everymind no workspace do Go
 
@@ -26,9 +26,16 @@ $ cd $GOPATH/src/bitbucket.org/everymind
 $ git clone https://seu-usuario-git@bitbucket.org/everymind/evmd-golib.git
 ```
 
+### Clonar o repositório gforce
+
+```bash
+$ cd $GOPATH/src/bitbucket.org/everymind
+$ git clone https://seu-usuario-git@bitbucket.org/everymind/gforce.git
+```
+
 ### Baixar dependências de repositórios externos
 
 ```bash
 $ cd $GOPATH/src/bitbucket.org/everymind
-$ make get
+$ go mod download
 ```

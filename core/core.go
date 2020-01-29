@@ -1,34 +1,35 @@
 package core
 
 import (
-	"context"
+	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 
-	"bitbucket.org/everymind/evmd-golib/logger"
-	"bitbucket.org/everymind/evmd-golib/utils"
-	"github.com/besser/cron"
-	"github.com/pkg/errors"
+	"github.com/robfig/cron/v3" // "github.com/besser/cron"
 	"github.com/spf13/cast"
-	"golang.org/x/oauth2/google"
-	"google.golang.org/api/compute/v1"
 
-	"bitbucket.org/everymind/evmd-gronos/dao"
-	"bitbucket.org/everymind/evmd-gronos/push"
+	"bitbucket.org/everymind/evmd-golib/v2/logger"
+	"bitbucket.org/everymind/evmd-golib/v2/utils"
+	"bitbucket.org/everymind/evmd-gronos/v3/dao"
+	"bitbucket.org/everymind/evmd-gronos/v3/push"
 )
 
+type ScheduledJob struct {
+	ID   cron.EntryID
+	Spec string
+}
+
 // Run é onde se inicia o processo
-func Run(c *cron.Cron) error {
+func Run(c *cron.Cron, sJobs map[string]ScheduledJob) error {
 	tenantID := cast.ToInt(os.Getenv("TENANT_ID"))
 
 	// Recupera todas os 'jobs' que deverão ser executados
 	jobs, err := dao.GetSchedules(tenantID)
 	if err != nil {
-		return errors.Wrap(err, "dao.GetSchedules()")
+		return fmt.Errorf("dao.GetSchedules(): %w", err)
 	}
 
 	if len(jobs) > 0 {
@@ -36,17 +37,21 @@ func Run(c *cron.Cron) error {
 			var insert bool
 
 			entryName := fmt.Sprintf("%03d_%s_%s_%s", j.TenantID, utils.RemoveSpacesAndLower(j.StackName), utils.RemoveSpacesAndLower(j.JobName), utils.RemoveSpacesAndLower(j.FuncName))
-			entry := c.EntryName(entryName)
 
-			if entry.ID > 0 {
-				if !j.Cron.Valid || j.Cron.String != entry.Spec || !j.IsActive || j.IsDeleted {
-					logger.Infof("Removing scheduled job '%s'", entry.Name)
-					c.Remove(entry.ID)
-					if !j.IsDeleted {
-						insert = false
-					} else {
-						insert = j.IsActive
+			sJob, ok := sJobs[entryName]
+			if ok && sJob.ID > 0 {
+				if entry := c.Entry(sJob.ID); entry.ID > 0 {
+					if !j.Cron.Valid || j.Cron.String != sJob.Spec || !j.IsActive || j.IsDeleted {
+						logger.Infof("Removing scheduled job '%s(id:%d)'", entryName, entry.ID)
+						c.Remove(entry.ID)
+						if !j.IsDeleted {
+							insert = false
+						} else {
+							insert = j.IsActive
+						}
 					}
+				} else if j.Cron.Valid && j.IsActive && !j.IsDeleted {
+					insert = true
 				}
 			} else if j.Cron.Valid && j.IsActive && !j.IsDeleted {
 				insert = true
@@ -60,40 +65,40 @@ func Run(c *cron.Cron) error {
 					return err
 				}
 
-				appName := j.AppEngineName.String
-
 				// Anonymous function
 				fn := func() {
-					pingJob(appName)
-
 					if err := push.Send(s); err != nil {
-						logger.Errorln(errors.Wrap(err, "push.Send()"))
+						logger.Errorln(fmt.Errorf("push.Send(): %w", err))
 					}
+
+					pingJob(j.AppEngineName.String)
 				}
 
 				location, _ := dao.GetParamByOrgID(j.OrgID, "ORG_TZ_LOCATION")
+				cronSpec := j.Cron.String
 
-				var id cron.EntryID
-				if location == "UTC" {
-					id, err = c.AddFuncN(entryName, j.Cron.String, fn)
+				if location != "UTC" {
+					_, err := time.LoadLocation(location)
 					if err != nil {
-						return err
-					}
-				} else {
-					loc, err := time.LoadLocation(location)
-					if err != nil {
-						logger.Errorln(errors.Wrap(err, "time.LoadLocation()"))
+						logger.Errorln(fmt.Errorf("time.LoadLocation(): %w", err))
 						logger.Warningf("The location '%s' is invalid, setting to UTC", location)
-						loc = time.UTC
-					}
-					id, err = c.AddFuncNLocation(entryName, j.Cron.String, loc, fn)
-					if err != nil {
-						return err
+					} else {
+						cronSpec = fmt.Sprintf("CRON_TZ=%s %s", location, j.Cron.String)
 					}
 				}
 
-				entry = c.Entry(id)
-				logger.Infof("Next scheduling job '%s' ('%s') to: %v", entry.Name, entry.Spec, entry.Next)
+				id, err := c.AddFunc(cronSpec, fn)
+				if err != nil {
+					return err
+				}
+
+				sJobs[entryName] = ScheduledJob{
+					ID:   id,
+					Spec: j.Cron.String,
+				}
+
+				entry := c.Entry(id)
+				logger.Infof("Next scheduling job '%s' (id:%d, cron:'%s') to: %v", entryName, entry.ID, j.Cron.String, entry.Next)
 			}
 		}
 	} else {
@@ -109,29 +114,24 @@ func Run(c *cron.Cron) error {
 }
 
 func pingJob(appEngineName string) {
-	ctx := context.Background()
-	credentials, err := google.FindDefaultCredentials(ctx, compute.ComputeScope)
-	if err != nil {
-		logger.Errorln(errors.Wrap(err, "google.FindDefaultCredentials()"))
-	}
+	cloudProject := os.Getenv("GOOGLE_CLOUD_PROJECT")
 
 	var sb strings.Builder
 	sb.WriteString("https://")
 	sb.WriteString(appEngineName)
 	sb.WriteString("-dot-")
-	sb.WriteString(credentials.ProjectID)
+	sb.WriteString(cloudProject)
 	sb.WriteString(".appspot.com/_ah/start")
 
 	response, err := http.Get(sb.String())
 	if err != nil {
-		logger.Errorln(errors.Wrap(err, "http.Get()"))
+		logger.Errorln(fmt.Errorf("http.Get(): %w", err))
 	}
+
+	logger.Infof("ping to job '%s' at %s: %s", appEngineName, sb.String(), response.Status)
 
 	if response.StatusCode/100 != 2 {
 		err := fmt.Errorf("job %s unavaliable", appEngineName)
 		logger.Errorln(err)
 	}
-
-	data, _ := ioutil.ReadAll(response.Body)
-	logger.Infoln("ping job: " + string(data))
 }

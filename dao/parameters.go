@@ -1,15 +1,16 @@
 package dao
 
 import (
-	"bitbucket.org/everymind/evmd-golib/db"
-	dd "bitbucket.org/everymind/evmd-golib/db/dao"
-	"github.com/pkg/errors"
+	"fmt"
+
+	"bitbucket.org/everymind/evmd-golib/v2/db"
+	dd "bitbucket.org/everymind/evmd-golib/v2/db/dao"
 )
 
 func GetParamByOrgID(orgID, paramName string) (string, error) {
 	conn, err := db.GetConnection("CONFIG")
 	if err != nil {
-		return "", errors.Wrap(err, "db.GetConnection('CONFIG')")
+		return "", fmt.Errorf("db.GetConnection('CONFIG'): %w", err)
 	}
 
 	p, err := dd.GetParameterByOrgID(conn, orgID, paramName)

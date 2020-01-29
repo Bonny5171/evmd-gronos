@@ -10,15 +10,16 @@ import (
 	"syscall"
 	"time"
 
-	"bitbucket.org/everymind/evmd-golib/db"
-	"bitbucket.org/everymind/evmd-golib/logger"
-	"github.com/besser/cron"
 	"github.com/gorilla/mux"
-	"github.com/pkg/errors"
+	"github.com/robfig/cron/v3" // "github.com/besser/cron"
 
-	"bitbucket.org/everymind/evmd-gronos/cmd"
-	"bitbucket.org/everymind/evmd-gronos/core"
+	"bitbucket.org/everymind/evmd-golib/v2/db"
+	"bitbucket.org/everymind/evmd-golib/v2/logger"
+	"bitbucket.org/everymind/evmd-gronos/v3/cmd"
+	"bitbucket.org/everymind/evmd-gronos/v3/core"
 )
+
+var version string
 
 func init() {
 	// Setting the limits the number of operating system threads that can execute user-level Go code simultaneously.
@@ -33,18 +34,17 @@ func main() {
 	cmd.StartFlags()
 
 	if cmd.BuildVersion {
-		fmt.Print(VERSION)
+		fmt.Print(version)
 		os.Exit(0)
 	}
 
 	if cmd.Version {
-		fmt.Printf("Version: %s (%s)\n", VERSION, runtime.Version())
+		fmt.Printf("Version: %s (%s)\n", version, runtime.Version())
 		os.Exit(0)
 	}
 
-	logger.Tracef("-> Starting gronos service version %s (%s)", VERSION, runtime.Version())
+	logger.Tracef("-> Starting gronos service version %s (%s)", version, runtime.Version())
 
-	// Starting web server
 	startWebServer()
 
 	os.Setenv("GOTRACE", strconv.FormatBool(cmd.Trace))
@@ -94,23 +94,31 @@ func main() {
 		MaxIdleConns:  dbMaxIdleConns,
 		MaxLifetime:   dbMaxLifeTime,
 	}); err != nil {
-		logger.Infof("DSN: %s\n", dsn)
+		logger.Infof("DSN: %s", dsn)
 		logger.Errorln(err)
 	}
 
 	logger.Traceln("Connected!")
 
 	// Create a new cron manager
-	c := cron.NewWithLocation(time.UTC)
+	loc := time.UTC
+	if locationStr := os.Getenv("LOCATION"); len(locationStr) > 0 {
+		if l, err := time.LoadLocation(locationStr); err == nil {
+			loc = l
+		}
+	}
+	c := cron.New(cron.WithLocation(loc))
 	defer c.Stop()
 
+	scheduledJobs := make(map[string]core.ScheduledJob, 0)
+
 	// Add func to cron
-	if _, err := c.AddFuncN("client", os.Getenv("GRONOS_SCHEDULE"), func() {
-		if err := startJob(c); err != nil {
-			logger.Errorln(errors.Wrap(err, "startJob()"))
+	if _, err := c.AddFunc(os.Getenv("GRONOS_SCHEDULE"), func() {
+		if err := startJob(c, scheduledJobs); err != nil {
+			logger.Errorln(fmt.Errorf("startJob(): %w", err))
 		}
 	}); err != nil {
-		logger.Fatalln(errors.Wrap(err, "c.AddFunc()"))
+		logger.Fatalln(fmt.Errorf("c.AddFunc(): %w", err))
 		return
 	}
 
@@ -132,10 +140,10 @@ func main() {
 	logger.Infoln("Got signal:", killSignal)
 }
 
-func startJob(c *cron.Cron) error {
+func startJob(c *cron.Cron, sJobs map[string]core.ScheduledJob) error {
 	// Job start here
-	if err := core.Run(c); err != nil {
-		return errors.Wrap(err, "core.Run()")
+	if err := core.Run(c, sJobs); err != nil {
+		return fmt.Errorf("core.Run(): %w", err)
 	}
 	return nil
 }

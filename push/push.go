@@ -4,12 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"bitbucket.org/everymind/evmd-golib/logger"
-
 	faktory "github.com/contribsys/faktory/client"
-	"github.com/pkg/errors"
 
-	"bitbucket.org/everymind/evmd-gronos/model"
+	"bitbucket.org/everymind/evmd-golib/v2/logger"
+	"bitbucket.org/everymind/evmd-gronos/v3/model"
 )
 
 // Send envia um push de job para o Faktory
@@ -19,7 +17,7 @@ func Send(s model.JobScheduler) error {
 		time.Sleep(5 * time.Second)
 		cl, err = faktory.Open()
 		if err != nil {
-			return errors.Wrap(err, "faktory.Open()")
+			return fmt.Errorf("faktory.Open(): %w", err)
 		}
 	}
 
@@ -48,7 +46,7 @@ func Send(s model.JobScheduler) error {
 	}
 
 	if err = cl.Push(job); err != nil {
-		return errors.Wrap(err, "cl.Push(job)")
+		return fmt.Errorf("cl.Push(job): %w", err)
 	}
 
 	logger.Tracef("Job '%s', Function: '%s', Stack: '%s', Params: '%v' pushed to Faktory on queue '%s'", s.JobName, s.FuncName, s.StackName, params, s.Queue)

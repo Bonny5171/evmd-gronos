@@ -34,7 +34,3 @@ __debug_bin
 bitbucket-pipelines.yml
 Makefile
 README.md
-
-# GO modules files
-go.mod
-go.sum

@@ -1,21 +1,21 @@
 package dao
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
-	"bitbucket.org/everymind/evmd-golib/db"
-	"github.com/pkg/errors"
 	"github.com/spf13/cast"
 
-	"bitbucket.org/everymind/evmd-gronos/model"
+	"bitbucket.org/everymind/evmd-golib/v2/db"
+	"bitbucket.org/everymind/evmd-gronos/v3/model"
 )
 
 // GetSchedules retorna todos os 'jobs' agendados que deverão ser executadas
 func GetSchedules(tenantID int) (s []model.JobScheduler, err error) {
 	conn, err := db.GetConnection("CONFIG")
 	if err != nil {
-		return nil, errors.Wrap(err, "db.GetConnection('CONFIG')")
+		return nil, fmt.Errorf("db.GetConnection('CONFIG'): %w", err)
 	}
 
 	tenantType := "JOB"
@@ -60,7 +60,7 @@ func GetSchedules(tenantID int) (s []model.JobScheduler, err error) {
 
 	err = conn.Select(&s, query.String(), params...)
 	if err != nil {
-		return nil, errors.Wrap(err, "conn.Select()")
+		return nil, fmt.Errorf("conn.Select(): %w", err)
 	}
 
 	return s, nil

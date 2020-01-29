@@ -1,0 +1,7 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/evmdsfa/evmd-gronos:latest', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/evmdsfa/evmd-gronos:$TAG_NAME', '.']
+  dir: 'subdirectory'
+images: ['gcr.io/evmdsfa/evmd-gronos:latest', 'gcr.io/evmdsfa/evmd-gronos:$TAG_NAME']

@@ -27,3 +27,6 @@ tmp
 
 # dive docker
 dive.log
+
+# private folder used to app engine deploy go-1.13
+private
