@@ -119,11 +119,11 @@ func pingJob(appEngineName string) {
 	cloudProject := os.Getenv("GOOGLE_CLOUD_PROJECT")
 
 	var sb strings.Builder
-	sb.WriteString("https://")
+	sb.WriteString("http://")
 	sb.WriteString(appEngineName)
 	sb.WriteString("-dot-")
 	sb.WriteString(cloudProject)
-	sb.WriteString(".appspot.com/_ah/start")
+	sb.WriteString(".appspot.com/")
 
 	response, err := http.Get(sb.String())
 	if err != nil {
