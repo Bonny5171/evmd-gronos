@@ -65,13 +65,15 @@ func Run(c *cron.Cron, sJobs map[string]ScheduledJob) error {
 					return err
 				}
 
+				appEngineName := j.AppEngineName.String
+
 				// Anonymous function
 				fn := func() {
 					if err := push.Send(s); err != nil {
 						logger.Errorln(fmt.Errorf("push.Send(): %w", err))
 					}
 
-					pingJob(j.AppEngineName.String)
+					pingJob(appEngineName)
 				}
 
 				location, _ := dao.GetParamByOrgID(j.OrgID, "ORG_TZ_LOCATION")
