@@ -1,6 +1,9 @@
 steps:
+# build
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/evmd-gronos:latest', '-t', 'gcr.io/$PROJECT_ID/evmd-gronos:$TAG_NAME', '.']
+  args: ['build', '--tag=gcr.io/$PROJECT_ID/evmd-gronos:latest', '--tag=gcr.io/$PROJECT_ID/evmd-gronos:$TAG_NAME', '.']
+
+# push
 - name: 'gcr.io/cloud-builders/docker'
   args: ["push", "gcr.io/$PROJECT_ID/evmd-gronos:latest"]
 - name: 'gcr.io/cloud-builders/docker'
