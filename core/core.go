@@ -100,7 +100,7 @@ func Run(c *cron.Cron, sJobs map[string]ScheduledJob) error {
 				}
 
 				entry := c.Entry(id)
-				logger.Infof("Next scheduling job '%s' (id:%d, cron:'%s') to: %v", entryName, entry.ID, j.Cron.String, entry.Next)
+				logger.Infof("Next scheduling job '%s' (id:%d, cron:'%s') to: %v", entryName, entry.ID, cronSpec, entry.Next)
 			}
 		}
 	} else {
