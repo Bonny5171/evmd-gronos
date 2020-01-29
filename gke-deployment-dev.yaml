@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: gronos
-          image: 'gcr.io/evmdsfa/evmd-gronos:v2.5.0'
+          image: 'gcr.io/evmdsfa/evmd-gronos:v2.5.2'
           command: [ "/gronos"]
           env:
             - name: GRONOS_DATABASE_DSN
