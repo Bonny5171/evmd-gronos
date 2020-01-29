@@ -1,9 +1,9 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/evmd-gronos:latest', '.']
+  args: ['build', '-t', 'gcr.io/[PROJECT_ID]/[IMAGE]:latest', '.']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ["push", "gcr.io/$PROJECT_ID/evmd-gronos:latest"]
+  args: ["push", "gcr.io/[PROJECT_ID]/[IMAGE]:latest"]
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/evmd-gronos:$TAG_NAME', '.']
+  args: ['build', '-t', 'gcr.io/[PROJECT_ID]/[IMAGE]:[TAG]', '.']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ["push", "gcr.io/$PROJECT_ID/evmd-gronos:$TAG_NAME"]
+  args: ["push", "gcr.io/[PROJECT_ID]/[IMAGE]:[TAG]"]
