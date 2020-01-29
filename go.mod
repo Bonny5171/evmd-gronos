@@ -12,3 +12,5 @@ require (
 )
 
 replace bitbucket.org/everymind/evmd-golib => ./private/bitbucket.org/everymind/evmd-golib
+
+replace bitbucket.org/everymind/gforce => ./private/bitbucket.org/everymind/gforce
