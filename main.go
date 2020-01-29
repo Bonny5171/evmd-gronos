@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"os/signal"
 	"runtime"
@@ -9,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/robfig/cron/v3" // "github.com/besser/cron"
 
 	"bitbucket.org/everymind/evmd-golib/db"
@@ -52,6 +54,8 @@ func main() {
 	if len(os.Getenv("GRONOS_SCHEDULE")) == 0 {
 		os.Setenv("GRONOS_SCHEDULE", "@every 30s")
 	}
+
+	startWebServer()
 
 	logger.Traceln("Openning conncetion with DBs...")
 
@@ -142,4 +146,49 @@ func startJob(c *cron.Cron, sJobs map[string]core.ScheduledJob) error {
 		return fmt.Errorf("core.Run(): %w", err)
 	}
 	return nil
+}
+
+func startWebServer() {
+	go func() {
+		router := mux.NewRouter().StrictSlash(true)
+
+		router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(200)
+			w.Write([]byte("ok"))
+		}).Methods("GET")
+
+		router.HandleFunc("/_ah/health", func(w http.ResponseWriter, r *http.Request) {
+			logger.Infoln("health check received")
+			w.WriteHeader(200)
+			w.Write([]byte("ok"))
+		}).Methods("GET")
+
+		router.HandleFunc("/_ah/warmup", func(w http.ResponseWriter, r *http.Request) {
+			logger.Infoln("warmup command received")
+			w.WriteHeader(200)
+			w.Write([]byte("ok"))
+		}).Methods("GET")
+
+		router.HandleFunc("/_ah/start", func(w http.ResponseWriter, r *http.Request) {
+			logger.Infoln("start command received")
+			w.WriteHeader(200)
+			w.Write([]byte("ok"))
+		}).Methods("GET")
+
+		router.HandleFunc("/_ah/stop", func(w http.ResponseWriter, r *http.Request) {
+			logger.Warningln("stop command received")
+			w.WriteHeader(200)
+			w.Write([]byte("ok"))
+		}).Methods("GET")
+
+		port := os.Getenv("PORT")
+		if len(port) == 0 {
+			port = "80"
+		}
+
+		logger.Traceln("Starting HTTP server...")
+		if err := http.ListenAndServe(":"+port, router); err != nil {
+			logger.Errorln(err)
+		}
+	}()
 }
