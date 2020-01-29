@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"os/signal"
 	"runtime"
@@ -10,7 +9,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gorilla/mux"
 	"github.com/robfig/cron/v3" // "github.com/besser/cron"
 
 	"bitbucket.org/everymind/evmd-golib/db"
