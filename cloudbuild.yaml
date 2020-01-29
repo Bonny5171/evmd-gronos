@@ -3,13 +3,13 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/evmd-gronos:latest', '.']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/evmd-gronos:$TAG_NAME', '.']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/evmd-gronos:$COMMIT_SHA', '.']
 # push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
   args: ["push", "gcr.io/$PROJECT_ID/evmd-gronos:latest"]
 - name: 'gcr.io/cloud-builders/docker'
-  args: ["push", "gcr.io/$PROJECT_ID/evmd-gronos:$TAG_NAME"]
+  args: ["push", "gcr.io/$PROJECT_ID/evmd-gronos:$COMMIT_SHA"]
 # Deploy container image to Cloud Run
 images:
   - 'gcr.io/$PROJECT_ID/evmd-gronos:latest'
-  - 'gcr.io/$PROJECT_ID/evmd-gronos:$TAG_NAME'
+  - 'gcr.io/$PROJECT_ID/evmd-gronos:$COMMIT_SHA'
