@@ -3,8 +3,8 @@ package dao
 import (
 	"fmt"
 
-	"bitbucket.org/everymind/evmd-golib/v2/db"
-	dd "bitbucket.org/everymind/evmd-golib/v2/db/dao"
+	"bitbucket.org/everymind/evmd-golib/db"
+	dd "bitbucket.org/everymind/evmd-golib/db/dao"
 )
 
 func GetParamByOrgID(orgID, paramName string) (string, error) {

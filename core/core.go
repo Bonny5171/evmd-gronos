@@ -11,10 +11,10 @@ import (
 	"github.com/robfig/cron/v3" // "github.com/besser/cron"
 	"github.com/spf13/cast"
 
-	"bitbucket.org/everymind/evmd-golib/v2/logger"
-	"bitbucket.org/everymind/evmd-golib/v2/utils"
-	"bitbucket.org/everymind/evmd-gronos/v3/dao"
-	"bitbucket.org/everymind/evmd-gronos/v3/push"
+	"bitbucket.org/everymind/evmd-golib/logger"
+	"bitbucket.org/everymind/evmd-golib/utils"
+	"bitbucket.org/everymind/evmd-gronos/dao"
+	"bitbucket.org/everymind/evmd-gronos/push"
 )
 
 type ScheduledJob struct {

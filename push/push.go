@@ -6,8 +6,8 @@ import (
 
 	faktory "github.com/contribsys/faktory/client"
 
-	"bitbucket.org/everymind/evmd-golib/v2/logger"
-	"bitbucket.org/everymind/evmd-gronos/v3/model"
+	"bitbucket.org/everymind/evmd-golib/logger"
+	"bitbucket.org/everymind/evmd-gronos/model"
 )
 
 // Send envia um push de job para o Faktory

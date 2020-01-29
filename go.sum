@@ -1,6 +1,6 @@
-bitbucket.org/everymind/evmd-golib/v2 v2.0.1 h1:wkOzTpjH5M9yH4vBQ9BrGvuc/+id29iD91q5FAKayHc=
-bitbucket.org/everymind/evmd-golib/v2 v2.0.1/go.mod h1:nA5m/eV7eQz1eHNtk8ghilBP8io5pATrh0W1kPkaEIQ=
-bitbucket.org/everymind/gforce/v2 v2.0.1/go.mod h1:iZU4azoMBFdRBWdqFwGsc4fEh3A/wcG8/8xp0NDpoKA=
+bitbucket.org/everymind/evmd-golib v1.7.0 h1:lDHqXkuwwI5Dp7RY0j4JNWtEJ1h6neoBTEJtUkQtAl0=
+bitbucket.org/everymind/evmd-golib v1.7.0/go.mod h1:XlslEV0T9Ws7wa8laBvHL7UzmxLh5l76C+rEDvCvqus=
+bitbucket.org/everymind/gforce v1.4.0/go.mod h1:6dJKIhqUaYCnvJAQx97+8q803Lc8RH5eQUr7USmfzdA=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/apex/log v1.1.0/go.mod h1:yA770aXIDQrhVOIGurT/pVdfCpSq1GQV/auzMN5fzvY=
 github.com/benbjohnson/ego v0.3.0/go.mod h1:6Qzj43pKX58WdlHDZKZS4Q/XXYwz6toIqXqNjzt4mNA=
