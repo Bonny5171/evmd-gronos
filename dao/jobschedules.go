@@ -5,10 +5,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/spf13/cast"
-
 	"bitbucket.org/everymind/evmd-golib/db"
 	"bitbucket.org/everymind/evmd-gronos/model"
+	"github.com/spf13/cast"
 )
 
 // GetSchedules retorna todos os 'jobs' agendados que deverão ser executadas

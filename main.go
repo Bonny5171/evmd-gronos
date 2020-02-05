@@ -10,13 +10,12 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gorilla/mux"
-	"github.com/robfig/cron/v3" // "github.com/besser/cron"
-
 	"bitbucket.org/everymind/evmd-golib/db"
 	"bitbucket.org/everymind/evmd-golib/logger"
 	"bitbucket.org/everymind/evmd-gronos/cmd"
 	"bitbucket.org/everymind/evmd-gronos/core"
+	"github.com/gorilla/mux"
+	"github.com/robfig/cron/v3"
 )
 
 var version string

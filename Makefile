@@ -6,7 +6,7 @@ OS        = linux
 ARCH      = amd64
 APPNAME   = gronos
 IMAGE     = evmd-gronos
-VERSION   = $$(go run -ldflags "-X main.version=`git tag --sort=-version:refname | head -n 1`" main.go -V)
+VERSION   = $$(git tag --sort=-version:refname | head -n 1)
 
 build:
 	@GOOS=$(OS) GOARCH=$(ARCH) $(GOBUILD) -o tmp/$(APPNAME) *.go
@@ -16,19 +16,19 @@ clean:
 	@rm -rf tmp
 
 run:
-	@source .env && go run -ldflags "-X main.version=`git tag --sort=-version:refname | head -n 1`" main.go
+	@source .env && go run -ldflags "-X main.version=$(VERSION)" main.go
 
 gae-deploy-dev:
 	@gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa && gcloud config list
-	@gcloud app deploy app.stg.dev.yaml --version=$(subst .,-,$(shell go run -ldflags "-X main.version=`git tag --sort=-version:refname | head -n 1`" main.go -V))
+	@gcloud app deploy app.stg.dev.yaml --version=$(subst .,-,$(shell git tag --sort=-version:refname | head -n 1))
 
 gae-deploy-qa:
 	@gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa && gcloud config list
-	@gcloud app deploy app.stg.qa.yaml --version=$(subst .,-,$(shell go run -ldflags "-X main.version=`git tag --sort=-version:refname | head -n 1`" main.go -V))
+	@gcloud app deploy app.stg.qa.yaml --version=$(subst .,-,$(shell git tag --sort=-version:refname | head -n 1))
 
 gae-deploy-snd:
 	@gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa-snd && gcloud config list
-	@gcloud app deploy app.snd.yaml --version=$(subst .,-,$(shell go run -ldflags "-X main.version=`git tag --sort=-version:refname | head -n 1`" main.go -V))
+	@gcloud app deploy app.snd.yaml --version=$(subst .,-,$(shell git tag --sort=-version:refname | head -n 1))
 	
 docker-auth:
 	@gcloud auth configure-docker

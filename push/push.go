@@ -7,24 +7,14 @@ import (
 	"strings"
 	"time"
 
-	faktory "github.com/contribsys/faktory/client"
-	"github.com/spf13/cast"
-
 	"bitbucket.org/everymind/evmd-golib/logger"
 	"bitbucket.org/everymind/evmd-gronos/model"
+	faktory "github.com/contribsys/faktory/client"
+	"github.com/spf13/cast"
 )
 
 // Send envia um push de job para o Faktory
 func Send(s model.JobScheduler) error {
-	// cl, err := faktory.Open()
-	// if err != nil {
-	// 	time.Sleep(5 * time.Second)
-	// 	cl, err = faktory.Open()
-	// 	if err != nil {
-	// 		return fmt.Errorf("faktory.Open(): %w", err)
-	// 	}
-	// }
-
 	cl, err := faktory.Open()
 	if err != nil {
 		logger.Errorln(fmt.Errorf("faktory.Open(): %w", err))
