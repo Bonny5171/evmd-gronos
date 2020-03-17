@@ -1,0 +1,26 @@
+runtime: go113
+
+service: gronos
+
+instance_class: B1
+
+manual_scaling:
+  instances: 1
+
+health_check:
+  enable_health_check: False
+
+inbound_services:
+  - warmup
+
+env_variables:
+  GRONOS_DATABASE_DSN: "host=/cloudsql/crmgrendene:us-central1:grensfa-dev port=5432 sslmode=require dbname=sfa_config_dev user=postgres password=p0st@gr3s application_name='gronos'"
+  GRONOS_DATABASE_MAXOPENCONNS: "5"
+  GRONOS_DATABASE_MAXIDLECONNS: "1"
+  GRONOS_DATABASE_MAXLIFETIME: "3"
+  GRONOS_SCHEDULE: "@every 5s"
+  FAKTORY_URL: "tcp://:F4kt0ry2019@23.236.48.148:7419"
+  GO111MODULE: "on"
+  GOPROXY: "https://proxy.golang.org/"
+  GOPRIVATE: "bitbucket.org/everymind"
+  GOOGLE_CLOUD_PROJECT: "crmgrendene"

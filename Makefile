@@ -19,17 +19,21 @@ run:
 	@source .env && go run -ldflags "-X main.version=$(VERSION)" main.go
 
 gae-deploy-dev:
-	@gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa && gcloud config list
+	@gcloud config set account $(shell gcloud config list account --format "value(core.account)") && gcloud config set project evmdsfa && gcloud config list
 	@gcloud app deploy app.stg.dev.yaml --version=$(subst .,-,$(shell git tag --sort=-version:refname | head -n 1))
 
 gae-deploy-qa:
-	@gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa && gcloud config list
+	@gcloud config set account $(shell gcloud config list account --format "value(core.account)") && gcloud config set project evmdsfa && gcloud config list
 	@gcloud app deploy app.stg.qa.yaml --version=$(subst .,-,$(shell git tag --sort=-version:refname | head -n 1))
 
 gae-deploy-snd:
-	@gcloud config set account roberto.besser@everymind.com.br && gcloud config set project evmdsfa-snd && gcloud config list
+	@gcloud config set account $(shell gcloud config list account --format "value(core.account)") && gcloud config set project evmdsfa-snd && gcloud config list
 	@gcloud app deploy app.snd.yaml --version=$(subst .,-,$(shell git tag --sort=-version:refname | head -n 1))
-	
+
+gae-deploy-grendene:
+	@gcloud config set account $(shell gcloud config list account --format "value(core.account)") && gcloud config set project crmgrendene && gcloud config list
+	@gcloud app deploy app.grendene.dev.yaml --version=$(subst .,-,$(shell git tag --sort=-version:refname | head -n 1))
+
 docker-auth:
 	@gcloud auth configure-docker
 
