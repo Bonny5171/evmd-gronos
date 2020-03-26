@@ -140,6 +140,7 @@ func main() {
 }
 
 func startJob(c *cron.Cron, sJobs map[string]core.ScheduledJob) error {
+
 	// Job start here
 	if err := core.Run(c, sJobs); err != nil {
 		return fmt.Errorf("core.Run(): %w", err)

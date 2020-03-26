@@ -7,9 +7,12 @@ import (
 	"strings"
 	"time"
 
+	"bitbucket.org/everymind/evmd-golib/db"
+	"bitbucket.org/everymind/evmd-golib/db/dao"
 	"bitbucket.org/everymind/evmd-golib/logger"
 	"bitbucket.org/everymind/evmd-gronos/model"
 	faktory "github.com/contribsys/faktory/client"
+	"github.com/jmoiron/sqlx"
 	"github.com/spf13/cast"
 )
 
@@ -59,6 +62,21 @@ func Send(s model.JobScheduler) error {
 		"stack": s.StackName,
 	}
 
+	//Clean Ghost Jobs before send Job
+	if err = db.Create(&db.PostgresDB{
+		ConnectionStr: s.DSN,
+		MaxLifetime:   0,
+		MaxIdleConns:  1,
+		MaxOpenConns:  1,
+	}); err != nil {
+		return fmt.Errorf("db.Create(): %v", err)
+	}
+	defer db.Close()
+
+	if err = cleanGhostJobs(db.Conn); err != nil {
+		return fmt.Errorf("cleanGhostJobs(db): %v", err)
+	}
+
 	if err = cl.Push(job); err != nil {
 		return fmt.Errorf("cl.Push(job): %w", err)
 	}
@@ -93,4 +111,13 @@ func pingJob(appEngineName string) {
 			logger.Errorln(err)
 		}
 	}
+}
+
+func cleanGhostJobs(conn *sqlx.DB) (err error) {
+	logger.Tracef("Calling CleanGhostJob on: %v", conn)
+	if err = dao.CleanGhostJobs(conn); err != nil {
+		return err
+	}
+	logger.Tracef("CleanGhostJob complete.")
+	return nil
 }
