@@ -18,9 +18,9 @@ require (
 // = TO PUBLISH IN GOOGLE CLOUD APP ENGINE =
 // =========================================
 
-replace bitbucket.org/everymind/evmd-golib => ./private/bitbucket.org/everymind/evmd-golib
+// replace bitbucket.org/everymind/evmd-golib => ./private/bitbucket.org/everymind/evmd-golib
 
-replace bitbucket.org/everymind/gforce => ./private/bitbucket.org/everymind/gforce
+// replace bitbucket.org/everymind/gforce => ./private/bitbucket.org/everymind/gforce
 
 // ============
 // = TO DEBUG =

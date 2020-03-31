@@ -1,0 +1,55 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gronos
+  labels:
+    app: gronos
+spec:
+  template:
+    metadata:
+      labels:
+        app: gronos
+    spec:
+      containers:
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command:
+            [
+              "/cloud_sql_proxy",
+              "-instances=evmdsfa:southamerica-east1:evmd-sfa-db-dev=tcp:5432",
+              "-credential_file=/secrets/cloudsql/credentials.json",
+            ]
+          volumeMounts:
+            - name: secrets-volume
+              mountPath: /secrets/cloudsql
+              readOnly: true
+        - name: gronos
+          image: gcr.io/evmdsfa/evmd-gronos:latest
+          command: ["/gronos"]
+          ports:
+            - containerPort: 80
+          env:
+            - name: GRONOS_DATABASE_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: gronos-config
+                  key: dsn
+            - name: FAKTORY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: gronos-config
+                  key: faktory_url
+            - name: GRONOS_DATABASE_MAXOPENCONNS
+              value: "5"
+            - name: GRONOS_DATABASE_MAXIDLECONNS
+              value: "1"
+            - name: GRONOS_DATABASE_MAXLIFETIME
+              value: "3"
+            - name: GRONOS_SCHEDULE
+              value: "@every 5s"
+            - name: JOB_TYPE
+              value: "JOB_K8S"
+      volumes:
+        - name: secrets-volume
+          secret:
+            secretName: cloudsql-instance-credentials
