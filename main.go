@@ -106,7 +106,7 @@ func main() {
 			loc = l
 		}
 	}
-	c := cron.New(cron.WithLocation(loc))
+	c := cron.New(cron.WithSeconds(), cron.WithLocation(loc))
 	defer c.Stop()
 
 	scheduledJobs := make(map[string]core.ScheduledJob, 0)
