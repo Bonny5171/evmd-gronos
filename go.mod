@@ -3,7 +3,7 @@ module bitbucket.org/everymind/evmd-gronos
 go 1.13
 
 require (
-	bitbucket.org/everymind/evmd-golib v1.8.8
+	bitbucket.org/everymind/evmd-golib v1.14.2
 	github.com/contribsys/faktory v1.2.0-1
 	github.com/gorilla/mux v1.7.3
 	github.com/jmoiron/sqlx v1.2.0
