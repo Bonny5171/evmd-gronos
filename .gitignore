@@ -30,3 +30,9 @@ dive.log
 
 # private folder used to app engine deploy go-1.13
 private
+
+# Compiled binary
+evmd-gronos
+
+# Dev vars
+export_vars.sh
