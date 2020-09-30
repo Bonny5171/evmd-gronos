@@ -25,7 +25,7 @@ func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	// Setting the log output and prefix
-	logger.Init("", os.Stdout, os.Stdout, os.Stdout, os.Stdout, os.Stderr)
+	logger.Init("GRONOS", os.Stdout, os.Stdout, os.Stdout, os.Stdout, os.Stderr)
 }
 
 func main() {
@@ -58,6 +58,60 @@ func main() {
 
 	logger.Traceln("Openning conncetion with DBs...")
 
+	startConnection()
+
+	// Create a new cron manager
+	loc := time.UTC
+	if locationStr := os.Getenv("LOCATION"); len(locationStr) > 0 {
+		if l, err := time.LoadLocation(locationStr); err == nil {
+			loc = l
+		}
+	}
+	c := cron.New(cron.WithSeconds(), cron.WithLocation(loc))
+	defer c.Stop()
+
+	scheduledJobs := make(map[string]core.ScheduledJob, 0)
+
+	// Add func to cron
+	if _, err := c.AddFunc(os.Getenv("GRONOS_SCHEDULE"), func() {
+		if err := startJob(c, scheduledJobs); err != nil {
+			if err.Error() == "core.Run(): dao.GetSchedules(): db.GetConnection('CONFIG'): DB queue connection not found" {
+				startConnection()
+			}
+			logger.Errorln(fmt.Errorf("startJob(): %w", err))
+		}
+	}); err != nil {
+		logger.Fatalln(fmt.Errorf("c.AddFunc(): %w", err))
+		return
+	}
+
+	logger.Tracef("Jobs cron verifications scheduled to: %s", os.Getenv("GRONOS_SCHEDULE"))
+
+	// Set up channel on which to send signal notifications.
+	// We must use a buffered channel or risk missing the signal
+	// if we're not ready to receive when the signal is sent.
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt, os.Kill, syscall.SIGTERM)
+
+	logger.Traceln("Waiting for job scheduled...")
+
+	// Start cron
+	c.Start()
+
+	// Waiting for interrupt by system signal
+	killSignal := <-interrupt
+	logger.Infoln("Got signal:", killSignal)
+}
+
+func startJob(c *cron.Cron, sJobs map[string]core.ScheduledJob) error {
+	// Job start here
+	if err := core.Run(c, sJobs); err != nil {
+		return fmt.Errorf("core.Run(): %w", err)
+	}
+	return nil
+}
+
+func startConnection() error {
 	// DB conn variables
 	var (
 		dbMaxOpenConns int = 5
@@ -97,54 +151,12 @@ func main() {
 		logger.Errorln(err)
 	}
 
+	if _, err := db.Connections.Get("CONFIG"); err != nil {
+		return err
+	}
+
 	logger.Traceln("Connected!")
 
-	// Create a new cron manager
-	loc := time.UTC
-	if locationStr := os.Getenv("LOCATION"); len(locationStr) > 0 {
-		if l, err := time.LoadLocation(locationStr); err == nil {
-			loc = l
-		}
-	}
-	c := cron.New(cron.WithSeconds(), cron.WithLocation(loc))
-	defer c.Stop()
-
-	scheduledJobs := make(map[string]core.ScheduledJob, 0)
-
-	// Add func to cron
-	if _, err := c.AddFunc(os.Getenv("GRONOS_SCHEDULE"), func() {
-		if err := startJob(c, scheduledJobs); err != nil {
-			logger.Errorln(fmt.Errorf("startJob(): %w", err))
-		}
-	}); err != nil {
-		logger.Fatalln(fmt.Errorf("c.AddFunc(): %w", err))
-		return
-	}
-
-	logger.Tracef("Jobs cron verifications scheduled to: %s", os.Getenv("GRONOS_SCHEDULE"))
-
-	// Set up channel on which to send signal notifications.
-	// We must use a buffered channel or risk missing the signal
-	// if we're not ready to receive when the signal is sent.
-	interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, os.Interrupt, os.Kill, syscall.SIGTERM)
-
-	logger.Traceln("Waiting for job scheduled...")
-
-	// Start cron
-	c.Start()
-
-	// Waiting for interrupt by system signal
-	killSignal := <-interrupt
-	logger.Infoln("Got signal:", killSignal)
-}
-
-func startJob(c *cron.Cron, sJobs map[string]core.ScheduledJob) error {
-
-	// Job start here
-	if err := core.Run(c, sJobs); err != nil {
-		return fmt.Errorf("core.Run(): %w", err)
-	}
 	return nil
 }
 
