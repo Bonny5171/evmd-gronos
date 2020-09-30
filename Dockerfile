@@ -2,7 +2,7 @@
 # BUILDER     #
 ###############
 FROM golang:1.13.7-alpine3.11 AS builder
-LABEL maintainer="Roberto Besser <roberto.besser@everymind.com.br>"
+LABEL maintainer="Leandro Alves <leandro.alves@everymind.com.br>"
 RUN apk --no-cache add ca-certificates git mercurial
 RUN git config --global url."https://everyminddev:VJN45xFcjXudwBbTG6vU@bitbucket.org/everymind/".insteadOf https://bitbucket.org/everymind/
 COPY . /src

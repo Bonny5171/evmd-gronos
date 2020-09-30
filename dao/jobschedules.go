@@ -17,7 +17,15 @@ func GetSchedules(tenantID int) (s []model.JobScheduler, err error) {
 		return nil, fmt.Errorf("db.GetConnection('CONFIG'): %w", err)
 	}
 
-	tenantType := "JOB"
+	var tenantType string
+
+	// tenantType := "JOB"
+	if len(os.Getenv("JOB_TYPE")) > 0 {
+		tenantType = os.Getenv("JOB_TYPE")
+	} else {
+		tenantType = "JOB"
+	}
+
 	if cast.ToBool(os.Getenv("DEBUG")) {
 		tenantType = "DEBUG"
 	}

@@ -51,7 +51,7 @@ docker-clean:
 	@docker rmi $$(docker images --filter "dangling=true" -q)
 
 docker-delete:
-	@gcloud container images delete gcr.io/$(GCPROJECT)/$(IMAGE):$(VERSION) --force-delete-tags
+	@gcloud container images delete gcr.io/$(shell gcloud config list project --format "value(core.project)")/$(IMAGE):$(VERSION) --force-delete-tags
 
 docker-push:
 	@docker push gcr.io/$(shell gcloud config list project --format "value(core.project)")/$(IMAGE):$(VERSION)
