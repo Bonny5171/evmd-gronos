@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"os/signal"
 	"runtime"
@@ -14,7 +13,6 @@ import (
 	"bitbucket.org/everymind/evmd-golib/logger"
 	"bitbucket.org/everymind/evmd-gronos/cmd"
 	"bitbucket.org/everymind/evmd-gronos/core"
-	"github.com/gorilla/mux"
 	"github.com/robfig/cron/v3"
 )
 
@@ -44,17 +42,21 @@ func main() {
 
 	logger.Tracef("-> Starting gronos service version %s (%s)", version, runtime.Version())
 
-	os.Setenv("GOTRACE", strconv.FormatBool(cmd.Trace))
+	err := os.Setenv("GOTRACE", strconv.FormatBool(cmd.Trace))
+	if err != nil {
+		logger.Fatalln("Error on set GOTRACE env")
+	}
 
 	if len(os.Getenv("GRONOS_DATABASE_DSN")) == 0 {
 		logger.Fatalln("Environment variable 'GRONOS_DATABASE_DSN' not defined!")
 	}
 
 	if len(os.Getenv("GRONOS_SCHEDULE")) == 0 {
-		os.Setenv("GRONOS_SCHEDULE", "@every 30s")
-	}
+		err := os.Setenv("GRONOS_SCHEDULE", "@every 30s")
+		if err != nil {
 
-	startWebServer()
+		}
+	}
 
 	logger.Traceln("Openning conncetion with DBs...")
 
@@ -111,7 +113,7 @@ func startJob(c *cron.Cron, sJobs map[string]core.ScheduledJob) error {
 	return nil
 }
 
-func startConnection() error {
+func startConnection() {
 	// DB conn variables
 	var (
 		dbMaxOpenConns int = 5
@@ -152,55 +154,10 @@ func startConnection() error {
 	}
 
 	if _, err := db.Connections.Get("CONFIG"); err != nil {
-		return err
+		logger.Errorln("db.Connections.Get(): %w", err)
 	}
 
 	logger.Traceln("Connected!")
 
-	return nil
-}
-
-func startWebServer() {
-	go func() {
-		router := mux.NewRouter().StrictSlash(true)
-
-		router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			w.WriteHeader(200)
-			w.Write([]byte("ok"))
-		}).Methods("GET")
-
-		// router.HandleFunc("/_ah/health", func(w http.ResponseWriter, r *http.Request) {
-		// 	logger.Infoln("health check received")
-		// 	w.WriteHeader(200)
-		// 	w.Write([]byte("ok"))
-		// }).Methods("GET")
-
-		// router.HandleFunc("/_ah/warmup", func(w http.ResponseWriter, r *http.Request) {
-		// 	logger.Infoln("warmup command received")
-		// 	w.WriteHeader(200)
-		// 	w.Write([]byte("ok"))
-		// }).Methods("GET")
-
-		// router.HandleFunc("/_ah/start", func(w http.ResponseWriter, r *http.Request) {
-		// 	logger.Infoln("start command received")
-		// 	w.WriteHeader(200)
-		// 	w.Write([]byte("ok"))
-		// }).Methods("GET")
-
-		// router.HandleFunc("/_ah/stop", func(w http.ResponseWriter, r *http.Request) {
-		// 	logger.Warningln("stop command received")
-		// 	w.WriteHeader(200)
-		// 	w.Write([]byte("ok"))
-		// }).Methods("GET")
-
-		port := os.Getenv("PORT")
-		if len(port) == 0 {
-			port = "80"
-		}
-
-		logger.Traceln("Starting HTTP server...")
-		if err := http.ListenAndServe(":"+port, router); err != nil {
-			logger.Errorln(err)
-		}
-	}()
+	return
 }
