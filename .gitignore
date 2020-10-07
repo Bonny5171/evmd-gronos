@@ -36,3 +36,7 @@ evmd-gronos
 
 # Dev vars
 export_vars.sh
+
+# Goland config files
+*.xml
+*.iml
