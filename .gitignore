@@ -40,3 +40,4 @@ export_vars.sh
 # Goland config files
 *.xml
 *.iml
+.idea
