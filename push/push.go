@@ -2,9 +2,7 @@ package push
 
 import (
 	"fmt"
-	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"bitbucket.org/everymind/evmd-golib/db"
@@ -72,34 +70,9 @@ func Send(s model.JobScheduler) error {
 
 	logger.Tracef("Job '%s', Function: '%s', Stack: '%s', Params: '%v' pushed to Faktory on queue '%s'", s.JobName, s.FuncName, s.StackName, params, s.Queue)
 
-	pingJob(s.AppEngineName.String)
+	//pingJob(s.AppEngineName.String)
 
 	return nil
-}
-
-func pingJob(appEngineName string) {
-	cloudProject := os.Getenv("GOOGLE_CLOUD_PROJECT")
-
-	var sb strings.Builder
-	sb.WriteString("http://")
-	sb.WriteString(appEngineName)
-	sb.WriteString("-dot-")
-	sb.WriteString(cloudProject)
-	sb.WriteString(".appspot.com/")
-
-	response, err := http.Get(sb.String())
-	if err != nil {
-		logger.Errorln(fmt.Errorf("http.Get(): %w", err))
-	}
-
-	if response != nil {
-		logger.Infof("ping to job '%s' at %s: %s", appEngineName, sb.String(), response.Status)
-
-		if response.StatusCode/100 != 2 {
-			err := fmt.Errorf("job %s unavaliable", appEngineName)
-			logger.Errorln(err)
-		}
-	}
 }
 
 func cleanGhostJobs(dsn string) (err error) {
