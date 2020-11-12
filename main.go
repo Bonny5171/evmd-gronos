@@ -11,8 +11,8 @@ import (
 
 	"bitbucket.org/everymind/evmd-golib/db"
 	"bitbucket.org/everymind/evmd-golib/logger"
-	"bitbucket.org/everymind/evmd-gronos/cmd"
-	"bitbucket.org/everymind/evmd-gronos/core"
+	"bitbucket.org/everymind/evmd-gronos/v2/cmd"
+	"bitbucket.org/everymind/evmd-gronos/v2/core"
 	"github.com/robfig/cron/v3"
 )
 
