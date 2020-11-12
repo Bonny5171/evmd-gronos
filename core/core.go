@@ -8,8 +8,8 @@ import (
 
 	"bitbucket.org/everymind/evmd-golib/logger"
 	"bitbucket.org/everymind/evmd-golib/utils"
-	"bitbucket.org/everymind/evmd-gronos/dao"
-	"bitbucket.org/everymind/evmd-gronos/push"
+	"bitbucket.org/everymind/evmd-gronos/v2/dao"
+	"bitbucket.org/everymind/evmd-gronos/v2/push"
 	"github.com/robfig/cron/v3" // "github.com/besser/cron"
 	"github.com/spf13/cast"
 )
