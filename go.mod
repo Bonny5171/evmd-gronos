@@ -1,4 +1,4 @@
-module bitbucket.org/everymind/evmd-gronos
+module bitbucket.org/everymind/evmd-gronos/v2
 
 go 1.13
 
