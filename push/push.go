@@ -9,7 +9,7 @@ import (
 
 	"bitbucket.org/everymind/evmd-golib/db/dao"
 	"bitbucket.org/everymind/evmd-golib/logger"
-	"bitbucket.org/everymind/evmd-gronos/model"
+	"bitbucket.org/everymind/evmd-gronos/v2/model"
 	faktory "github.com/contribsys/faktory/client"
 	"github.com/spf13/cast"
 )

@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"bitbucket.org/everymind/evmd-golib/db"
-	"bitbucket.org/everymind/evmd-gronos/model"
+	"bitbucket.org/everymind/evmd-gronos/v2/model"
 	"github.com/spf13/cast"
 )
 
