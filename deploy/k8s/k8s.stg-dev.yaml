@@ -1,10 +1,13 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gronos-dev
   labels:
     app: gronos-dev
 spec:
+  selector:
+    matchLabels:
+      app: gronos-dev
   template:
     metadata:
       labels:
