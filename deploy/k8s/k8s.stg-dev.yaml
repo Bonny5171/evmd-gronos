@@ -4,14 +4,20 @@ metadata:
   name: gronos-dev
   labels:
     app: gronos-dev
+    environment: stg
+    version: v2.8.4
 spec:
   selector:
     matchLabels:
       app: gronos-dev
+      environment: stg
+      version: v2.8.4
   template:
     metadata:
       labels:
         app: gronos-dev
+        environment: stg
+        version: v2.8.4
     spec:
       containers:
         - name: gronos-dev

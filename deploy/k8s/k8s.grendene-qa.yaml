@@ -1,14 +1,23 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gronos-qa
   labels:
     app: gronos-qa
+    environment: qa
+    version: v2.8.4
 spec:
+  selector:
+    matchLabels:
+      app: gronos
+      environment: qa
+      version: v2.8.4
   template:
     metadata:
       labels:
         app: gronos-qa
+        environment: qa
+        version: v2.8.4
     spec:
       containers:
         - name: cloudsql-proxy
