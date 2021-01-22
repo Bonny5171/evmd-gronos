@@ -1,3 +1,4 @@
+// Package core contém as funções essenciais de funcionamento do gronos
 package core
 
 import (
@@ -14,6 +15,7 @@ import (
 	"github.com/spf13/cast"
 )
 
+// ScheduledJob struct que representa um registro de schedule da tabela job_scheduler
 type ScheduledJob struct {
 	ID   cron.EntryID
 	Spec string

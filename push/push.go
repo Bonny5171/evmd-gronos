@@ -5,9 +5,6 @@ import (
 	"os"
 	"time"
 
-	"bitbucket.org/everymind/evmd-golib/db"
-
-	"bitbucket.org/everymind/evmd-golib/db/dao"
 	"bitbucket.org/everymind/evmd-golib/logger"
 	"bitbucket.org/everymind/evmd-gronos/v2/model"
 	faktory "github.com/contribsys/faktory/client"
@@ -60,9 +57,9 @@ func Send(s model.JobScheduler) error {
 		"stack": s.StackName,
 	}
 
-	if err = cleanGhostJobs(s.DSN); err != nil {
-		return fmt.Errorf("cleanGhostJobs(db): %v", err)
-	}
+	// if err = cleanGhostJobs(s.DSN); err != nil {
+	// 	return fmt.Errorf("cleanGhostJobs(db): %v", err)
+	// }
 
 	if err = cl.Push(job); err != nil {
 		return fmt.Errorf("cl.Push(job): %w", err)
@@ -75,23 +72,23 @@ func Send(s model.JobScheduler) error {
 	return nil
 }
 
-func cleanGhostJobs(dsn string) (err error) {
-	if err := db.Create(&db.PostgresDB{
-		ConnectionStr: dsn,
-		MaxLifetime:   0,
-		MaxIdleConns:  1,
-		MaxOpenConns:  1,
-	}); err != nil {
-		return fmt.Errorf("db.Create(): %v", err)
-	}
+// func cleanGhostJobs(dsn string) (err error) {
+// 	if err := db.Create(&db.PostgresDB{
+// 		ConnectionStr: dsn,
+// 		MaxLifetime:   0,
+// 		MaxIdleConns:  1,
+// 		MaxOpenConns:  1,
+// 	}); err != nil {
+// 		return fmt.Errorf("db.Create(): %v", err)
+// 	}
 
-	dbConn := db.Conn
-	defer dbConn.Close()
+// 	dbConn := db.Conn
+// 	defer dbConn.Close()
 
-	logger.Tracef("Calling CleanGhostJob on: %v", dbConn)
-	if err = dao.CleanGhostJobs(dbConn); err != nil {
-		return err
-	}
-	logger.Tracef("CleanGhostJob complete.")
-	return nil
-}
+// 	logger.Tracef("Calling CleanGhostJob on: %v", dbConn)
+// 	if err = dao.CleanGhostJobs(dbConn); err != nil {
+// 		return err
+// 	}
+// 	logger.Tracef("CleanGhostJob complete.")
+// 	return nil
+// }
