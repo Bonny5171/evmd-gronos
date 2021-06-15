@@ -23,6 +23,13 @@ spec:
         - name: gronos-dev
           image: gcr.io/evmd-sfa-stg-2/evmd-gronos:latest
           command: ["/gronos"]
+          resources:
+            limits:
+              memory: "50Mi"
+              cpu: "100m"
+            requests:
+              memory: "10Mi"
+              cpu: "10m"
           ports:
             - containerPort: 80
           env:
