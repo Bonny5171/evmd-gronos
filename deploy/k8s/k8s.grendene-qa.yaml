@@ -9,7 +9,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: gronos
+      app: gronos-qa
       environment: qa
       version: v2.8.4
   template:
@@ -25,7 +25,7 @@ spec:
           command:
             [
               "/cloud_sql_proxy",
-              "-instances=crmgrendene:us-central1:grensfa-qa=tcp:5432",
+              "-instances=crmgrendene:us-central1:grensfa-qa-resize=tcp:5432",
               "-credential_file=/secrets/cloudsql/credentials.json",
             ]
           volumeMounts:
