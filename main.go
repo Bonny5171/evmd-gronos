@@ -54,8 +54,11 @@ func main() {
 	if len(os.Getenv("GRONOS_SCHEDULE")) == 0 {
 		err := os.Setenv("GRONOS_SCHEDULE", "@every 30s")
 		if err != nil {
-
 		}
+	}
+
+	if len(os.Getenv("STACKS")) == 0 {
+		logger.Fatalln("Environment variable 'STACKS' not defined!")
 	}
 
 	logger.Traceln("Openning conncetion with DBs...")

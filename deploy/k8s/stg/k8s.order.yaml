@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gronos-dev
-  namespace: product
+  namespace: order
   labels:
     app: gronos-dev
     environment: stg
@@ -52,3 +52,7 @@ spec:
               value: "3"
             - name: GRONOS_SCHEDULE
               value: "@every 5s"
+            - name: STACKS
+              value: "order"
+            - name: DEBUGGO
+              value: "true"
