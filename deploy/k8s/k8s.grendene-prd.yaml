@@ -1,35 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gronos-dev
+  name: gronos-prd
   labels:
-    app: gronos-dev
-    environment: stg
+    app: gronos-prd
+    environment: prd
     version: v2.8.5
 spec:
   selector:
     matchLabels:
-      app: gronos-dev
-      environment: stg
+      app: gronos-prd
+      environment: prd
       version: v2.8.5
   template:
     metadata:
       labels:
-        app: gronos-dev
-        environment: stg
+        app: gronos-prd
+        environment: prd
         version: v2.8.5
     spec:
       containers:
-        - name: gronos-dev
-          image: gcr.io/evmd-sfa-stg-2/evmd-gronos:latest
+        - name: gronos-prd
+          image: gcr.io/crmgrendene/evmd-gronos:latest
           command: ["/gronos"]
-          resources:
-            limits:
-              memory: "50Mi"
-              cpu: "100m"
-            requests:
-              memory: "10Mi"
-              cpu: "10m"
           ports:
             - containerPort: 80
           env:

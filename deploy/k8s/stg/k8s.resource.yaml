@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gronos-dev
+  namespace: resource
   labels:
     app: gronos-dev
     environment: stg
@@ -51,3 +52,7 @@ spec:
               value: "3"
             - name: GRONOS_SCHEDULE
               value: "@every 5s"
+            - name: STACKS
+              value: "resource"
+            - name: DEBUGGO
+              value: "true"
