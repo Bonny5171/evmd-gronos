@@ -5,19 +5,19 @@ metadata:
   labels:
     app: gronos-snd
     environment: snd
-    version: v2.8.6
+    version: v2.8.7
 spec:
   selector:
     matchLabels:
       app: gronos-snd
       environment: snd
-      version: v2.8.6
+      version: v2.8.7
   template:
     metadata:
       labels:
         app: gronos-snd
         environment: snd
-        version: v2.8.6
+        version: v2.8.7
     spec:
       containers:
         # - name: cloudsql-proxy

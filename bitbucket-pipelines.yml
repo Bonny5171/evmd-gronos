@@ -102,7 +102,7 @@ pipelines:
             - docker push gcr.io/${GCLOUD_PRD_PROJECT}/${IMAGE}:${VERSION}
             - docker push gcr.io/${GCLOUD_PRD_PROJECT}/${IMAGE}:latest
             - gcloud components install kubectl
-            - gcloud container clusters get-credentials cluster --zone us-central1-a --project evmd-sfa-prd
+            - gcloud container clusters get-credentials cluster-prd --zone us-central1-a --project evmd-sfa-prd
             - set +e
             - kubectl delete -f deploy/k8s/prd
             - set -e
