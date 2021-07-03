@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gronos-dev
-  namespace: account
+  name: gronos
+  namespace: resource
   labels:
-    app: gronos-dev
-    environment: stg
-    version: v2.8.6
+    app: gronos
+    environment: production
+    version: v2.8.4
 spec:
   selector:
     matchLabels:
-      app: gronos-dev
-      environment: stg
-      version: v2.8.6
+      app: gronos
+      environment: production
+      version: v2.8.4
   template:
     metadata:
       labels:
-        app: gronos-dev
-        environment: stg
-        version: v2.8.6
+        app: gronos
+        environment: production
+        version: v2.8.4
     spec:
       containers:
-        - name: gronos-dev
-          image: gcr.io/evmd-sfa-stg-2/evmd-gronos:latest
+        - name: gronos
+          image: gcr.io/evmd-sfa-prd/evmd-gronos:latest
           command: ["/gronos"]
           resources:
             limits:
@@ -53,6 +53,4 @@ spec:
             - name: GRONOS_SCHEDULE
               value: "@every 5s"
             - name: STACKS
-              value: "account"
-            - name: DEBUGGO
-              value: "true"
+              value: "resource"

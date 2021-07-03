@@ -5,19 +5,19 @@ metadata:
   labels:
     app: gronos
     environment: production
-    version: v2.8.5
+    version: v2.8.6
 spec:
   selector:
     matchLabels:
       app: gronos
       environment: production
-      version: v2.8.5
+      version: v2.8.6
   template:
     metadata:
       labels:
         app: gronos
         environment: production
-        version: v2.8.5
+        version: v2.8.6
     spec:
       containers:
         - name: gronos

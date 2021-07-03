@@ -16,7 +16,7 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
-var version = "2.8.5"
+var version = "2.8.6"
 
 func init() {
 	// Setting the limits the number of operating system threads that can execute user-level Go code simultaneously.

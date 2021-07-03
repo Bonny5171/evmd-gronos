@@ -6,19 +6,19 @@ metadata:
   labels:
     app: gronos-snd
     environment: snd
-    version: v2.8.5
+    version: v2.8.6
 spec:
   selector:
     matchLabels:
       app: gronos-snd
       environment: snd
-      version: v2.8.5
+      version: v2.8.6
   template:
     metadata:
       labels:
         app: gronos-snd
         environment: snd
-        version: v2.8.5
+        version: v2.8.6
     spec:
       containers:
         - name: gronos-snd
@@ -52,6 +52,8 @@ spec:
               value: "3"
             - name: GRONOS_SCHEDULE
               value: "@every 5s"
+            - name: STACKS
+              value: "product"
       volumes:
         - name: secrets-volume
           secret:
