@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gronos-snd
-  namespace: product
+  name: gronos
+  namespace: resource
   labels:
-    app: gronos-snd
-    environment: snd
+    app: gronos
+    environment: production
     version: v2.8.4
 spec:
   selector:
     matchLabels:
-      app: gronos-snd
-      environment: snd
+      app: gronos
+      environment: production
       version: v2.8.4
   template:
     metadata:
       labels:
-        app: gronos-snd
-        environment: snd
+        app: gronos
+        environment: production
         version: v2.8.4
     spec:
       containers:
-        - name: gronos-snd
-          image: gcr.io/evmdsfa-snd/evmd-gronos:latest
+        - name: gronos
+          image: gcr.io/evmd-sfa-prd/evmd-gronos:latest
           command: ["/gronos"]
           resources:
             limits:
@@ -53,8 +53,4 @@ spec:
             - name: GRONOS_SCHEDULE
               value: "@every 5s"
             - name: STACKS
-              value: "product"
-      volumes:
-        - name: secrets-volume
-          secret:
-            secretName: cloudsql-instance-credentials
+              value: "resource"
