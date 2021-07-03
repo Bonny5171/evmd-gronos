@@ -16,7 +16,7 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
-var version = "2.8.4"
+var version = "2.8.7"
 
 func init() {
 	// Setting the limits the number of operating system threads that can execute user-level Go code simultaneously.
@@ -54,8 +54,11 @@ func main() {
 	if len(os.Getenv("GRONOS_SCHEDULE")) == 0 {
 		err := os.Setenv("GRONOS_SCHEDULE", "@every 30s")
 		if err != nil {
-
 		}
+	}
+
+	if len(os.Getenv("STACKS")) == 0 {
+		logger.Fatalln("Environment variable 'STACKS' not defined!")
 	}
 
 	logger.Traceln("Openning conncetion with DBs...")
