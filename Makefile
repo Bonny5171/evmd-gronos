@@ -6,7 +6,7 @@ OS        = linux
 ARCH      = amd64
 APPNAME   = gronos
 IMAGE     = evmd-gronos
-VERSION   = $$(git tag --sort=-version:refname | head -n 1)
+VERSION   = v2.8.7
 
 build:
 	@GOOS=$(OS) GOARCH=$(ARCH) $(GOBUILD) -o tmp/$(APPNAME) *.go
@@ -14,6 +14,9 @@ build:
 clean:
 	@go clean -i -x ./...
 	@rm -rf tmp
+
+version:
+	@echo $(VERSION)
 
 run:
 	@source .env && go run -ldflags "-X main.version=$(VERSION)" main.go

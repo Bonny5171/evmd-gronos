@@ -1,46 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gronos-snd
+  name: gronos-dev
+  namespace: account
   labels:
-    app: gronos-snd
-    environment: snd
+    app: gronos-dev
+    environment: stg
     version: v2.8.7
 spec:
   selector:
     matchLabels:
-      app: gronos-snd
-      environment: snd
+      app: gronos-dev
+      environment: stg
       version: v2.8.7
   template:
     metadata:
       labels:
-        app: gronos-snd
-        environment: snd
+        app: gronos-dev
+        environment: stg
         version: v2.8.7
     spec:
       containers:
-        # - name: cloudsql-proxy
-        #   image: gcr.io/cloudsql-docker/gce-proxy:1.11
-        #   command:
-        #     [
-        #       "/cloud_sql_proxy",
-        #       "-instances=evmdsfa-snd:southamerica-east1:evmdsfa-db-snd=tcp:5432",
-        #       "-credential_file=/secrets/cloudsql/credentials.json",
-        #     ]
-        #   resources:
-        #     limits:
-        #       memory: "50Mi"
-        #       cpu: "100m"
-        #     requests:
-        #       memory: "10Mi"
-        #       cpu: "10m"
-        #   volumeMounts:
-        #     - name: secrets-volume
-        #       mountPath: /secrets/cloudsql
-        #       readOnly: true
-        - name: gronos-snd
-          image: gcr.io/evmdsfa-snd/evmd-gronos:latest
+        - name: gronos-dev
+          image: gcr.io/evmd-sfa-stg-2/evmd-gronos:latest
           command: ["/gronos"]
           resources:
             limits:
@@ -70,7 +52,7 @@ spec:
               value: "3"
             - name: GRONOS_SCHEDULE
               value: "@every 5s"
-      volumes:
-        - name: secrets-volume
-          secret:
-            secretName: cloudsql-instance-credentials
+            - name: STACKS
+              value: "account"
+            - name: DEBUGGO
+              value: "true"

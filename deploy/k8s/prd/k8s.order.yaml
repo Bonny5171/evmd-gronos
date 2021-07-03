@@ -2,27 +2,35 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gronos
+  namespace: order
   labels:
     app: gronos
     environment: production
-    version: v2.8.7
+    version: v2.8.4
 spec:
   selector:
     matchLabels:
       app: gronos
       environment: production
-      version: v2.8.7
+      version: v2.8.4
   template:
     metadata:
       labels:
         app: gronos
         environment: production
-        version: v2.8.7
+        version: v2.8.4
     spec:
       containers:
         - name: gronos
           image: gcr.io/evmd-sfa-prd/evmd-gronos:latest
           command: ["/gronos"]
+          resources:
+            limits:
+              memory: "50Mi"
+              cpu: "100m"
+            requests:
+              memory: "10Mi"
+              cpu: "10m"
           ports:
             - containerPort: 80
           env:
@@ -44,3 +52,5 @@ spec:
               value: "3"
             - name: GRONOS_SCHEDULE
               value: "@every 5s"
+            - name: STACKS
+              value: "order"

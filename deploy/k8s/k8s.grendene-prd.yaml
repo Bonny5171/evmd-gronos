@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gronos
+  name: gronos-prd
   labels:
-    app: gronos
-    environment: production
+    app: gronos-prd
+    environment: prd
     version: v2.8.7
 spec:
   selector:
     matchLabels:
-      app: gronos
-      environment: production
+      app: gronos-prd
+      environment: prd
       version: v2.8.7
   template:
     metadata:
       labels:
-        app: gronos
-        environment: production
+        app: gronos-prd
+        environment: prd
         version: v2.8.7
     spec:
       containers:
-        - name: gronos
-          image: gcr.io/evmd-sfa-prd/evmd-gronos:latest
+        - name: gronos-prd
+          image: gcr.io/crmgrendene/evmd-gronos:latest
           command: ["/gronos"]
           ports:
             - containerPort: 80

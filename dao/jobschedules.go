@@ -30,6 +30,8 @@ func GetSchedules(tenantID int) (s []model.JobScheduler, err error) {
 		tenantType = "DEBUG"
 	}
 
+	stacks := cast.ToStringSlice(os.Getenv("STACKS"))
+
 	params := []interface{}{tenantType}
 	query := strings.Builder{}
 
@@ -55,8 +57,14 @@ func GetSchedules(tenantID int) (s []model.JobScheduler, err error) {
 			j.appengine_name
 		FROM public.job_scheduler j
 		INNER JOIN public.tenant t ON j.tenant_id = t.id
-		INNER JOIN public.stack  m ON j.stack_id = m.id AND m.is_active = TRUE AND m.is_deleted = FALSE
-		INNER JOIN public.dsn    d ON m.id = d.stack_id AND upper(d."type") = $1`)
+		INNER JOIN public.stack  m ON j.stack_id = m.id AND m.is_active = TRUE AND m.is_deleted = FALSE AND lower(m.name) IN (`)
+	for idx, s := range stacks {
+		query.WriteString(fmt.Sprintf("'%s'", s))
+		if idx+1 < len(stacks) {
+			query.WriteString(`,`)
+		}
+	}
+	query.WriteString(`) INNER JOIN public.dsn    d ON m.id = d.stack_id AND upper(d."type") = $1`)
 
 	if tenantID > 0 {
 		query.WriteString(" WHERE j.tenant_id = $2")

@@ -1,0 +1,113 @@
+image: atlassian/default-image:2
+
+pipelines:
+  definitions:
+    steps:
+      - step: &build
+          name: "Build"
+          script:
+            - VERSION="$(make version)-${BITBUCKET_BUILD_NUMBER}"
+            - echo ${VERSION} > ./version.txt
+            - docker build -t ${IMAGE}:${VERSION} -t ${IMAGE}:latest .
+            - docker save --output output-image.docker ${IMAGE}:${VERSION}
+          services:
+            - docker
+          caches:
+            - docker
+          artifacts:
+            - version.txt
+            - output-image.docker
+      - step: &build_prd
+          name: "Build PRD"
+          script:
+            - VERSION=$(make version)
+            - echo ${VERSION} > ./version.txt
+            - docker build -t ${IMAGE}:${VERSION} -t ${IMAGE}:latest .
+            - docker save --output output-image.docker ${IMAGE}:${VERSION}
+          services:
+            - docker
+          caches:
+            - docker
+          artifacts:
+            - version.txt
+            - output-image.docker
+
+  branches:
+    deploy_stg:
+      - step: *build
+      - step:
+          name: Deploy to STG
+          image: google/cloud-sdk:alpine
+          script:
+            - docker load --input ./output-image.docker
+            - echo $GCLOUD_API_KEYFILE_STG | base64 -d > ./gcloud-api-key.json
+            - gcloud auth activate-service-account --key-file gcloud-api-key.json
+            - gcloud config set project $GCLOUD_STG_PROJECT
+            - gcloud auth configure-docker
+            - VERSION=$(cat ./version.txt)
+            - docker tag ${IMAGE}:${VERSION} gcr.io/${GCLOUD_STG_PROJECT}/${IMAGE}:${VERSION}
+            - docker tag ${IMAGE}:${VERSION} gcr.io/${GCLOUD_STG_PROJECT}/${IMAGE}:latest
+            - docker push gcr.io/${GCLOUD_STG_PROJECT}/${IMAGE}:${VERSION}
+            - docker push gcr.io/${GCLOUD_STG_PROJECT}/${IMAGE}:latest
+            - gcloud components install kubectl
+            - gcloud container clusters get-credentials cluster-stg --zone us-central1-a --project evmd-sfa-stg-2
+            - set +e
+            - kubectl delete -f deploy/k8s/stg
+            - set -e
+            - kubectl create -f deploy/k8s/stg
+          services:
+            - docker
+          caches:
+            - docker
+    deploy_snd:
+      - step: *build
+      - step:
+          name: Deploy to SND
+          image: google/cloud-sdk:alpine
+          script:
+            - docker load --input ./output-image.docker
+            - echo $GCLOUD_API_KEYFILE_SND | base64 -d > ./gcloud-api-key.json
+            - gcloud auth activate-service-account --key-file gcloud-api-key.json
+            - gcloud config set project $GCLOUD_SND_PROJECT
+            - gcloud auth configure-docker
+            - VERSION=$(cat ./version.txt)
+            - docker tag ${IMAGE}:${VERSION} gcr.io/${GCLOUD_SND_PROJECT}/${IMAGE}:${VERSION}
+            - docker tag ${IMAGE}:${VERSION} gcr.io/${GCLOUD_SND_PROJECT}/${IMAGE}:latest
+            - docker push gcr.io/${GCLOUD_SND_PROJECT}/${IMAGE}:${VERSION}
+            - docker push gcr.io/${GCLOUD_SND_PROJECT}/${IMAGE}:latest
+            - gcloud components install kubectl
+            - gcloud container clusters get-credentials cluster --region southamerica-east1 --project evmdsfa-snd
+            - set +e
+            - kubectl delete -f deploy/k8s/snd
+            - set -e
+            - kubectl create -f deploy/k8s/snd
+          services:
+            - docker
+          caches:
+            - docker
+    deploy_prd:
+      - step: *build_prd
+      - step:
+          name: Deploy to PRD
+          image: google/cloud-sdk:alpine
+          script:
+            - docker load --input ./output-image.docker
+            - echo $GCLOUD_API_KEYFILE_PRD | base64 -d > ./gcloud-api-key.json
+            - gcloud auth activate-service-account --key-file gcloud-api-key.json
+            - gcloud config set project $GCLOUD_PRD_PROJECT
+            - gcloud auth configure-docker
+            - VERSION=$(cat ./version.txt)
+            - docker tag ${IMAGE}:${VERSION} gcr.io/${GCLOUD_PRD_PROJECT}/${IMAGE}:${VERSION}
+            - docker tag ${IMAGE}:${VERSION} gcr.io/${GCLOUD_PRD_PROJECT}/${IMAGE}:latest
+            - docker push gcr.io/${GCLOUD_PRD_PROJECT}/${IMAGE}:${VERSION}
+            - docker push gcr.io/${GCLOUD_PRD_PROJECT}/${IMAGE}:latest
+            - gcloud components install kubectl
+            - gcloud container clusters get-credentials cluster-prd --zone us-central1-a --project evmd-sfa-prd
+            - set +e
+            - kubectl delete -f deploy/k8s/prd
+            - set -e
+            - kubectl create -f deploy/k8s/prd
+          services:
+            - docker
+          caches:
+            - docker
