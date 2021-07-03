@@ -6,19 +6,19 @@ metadata:
   labels:
     app: gronos-dev
     environment: stg
-    version: v2.8.6
+    version: v2.8.7
 spec:
   selector:
     matchLabels:
       app: gronos-dev
       environment: stg
-      version: v2.8.6
+      version: v2.8.7
   template:
     metadata:
       labels:
         app: gronos-dev
         environment: stg
-        version: v2.8.6
+        version: v2.8.7
     spec:
       containers:
         - name: gronos-dev
